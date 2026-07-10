@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PrimeLogic | O Futuro em Movimento</title>
+    <title>PrimeLogic | Tecnologia que Respira</title>
     <!-- Fontes Premium -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;900&family=Space+Grotesk:wght@700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Space+Grotesk:wght@700;900&display=swap" rel="stylesheet">
     <!-- Ícones -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Leaflet CSS (Para o Mapa) -->
@@ -13,249 +13,315 @@
     
     <style>
         :root {
-            --bg-dark: #030305;
+            --bg-light: #f8fafc;
+            --bg-white: #ffffff;
             --primary-blue: #1A365D;
-            --neon-blue: #00f0ff;
-            --text-main: #ffffff;
-            --text-muted: #8892b0;
-            --glass-bg: rgba(10, 11, 16, 0.75);
-            --glass-border: rgba(255, 255, 255, 0.05);
+            --accent-blue: #3b82f6;
+            --text-dark: #0f172a;
+            --text-muted: #64748b;
+            --glass-bg: rgba(255, 255, 255, 0.7);
+            --glass-border: rgba(255, 255, 255, 0.5);
+            --shadow-soft: 0 20px 40px rgba(0, 0, 0, 0.05);
+            --shadow-hover: 0 30px 60px rgba(26, 54, 93, 0.12);
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; scroll-behavior: smooth; }
-        body { background-color: var(--bg-dark); color: var(--text-main); overflow-x: hidden; }
-
-        /* Fundo Animado (Canvas) */
-        #particles-canvas {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            z-index: -1;
-            pointer-events: none;
+        
+        body { 
+            background-color: var(--bg-light); 
+            color: var(--text-dark); 
+            overflow-x: hidden; 
+            position: relative;
         }
 
-        /* Nav */
+        /* O Dinamismo Clean: Bolhas Flutuantes no Fundo */
+        .ambient-bg {
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            z-index: -1; overflow: hidden; pointer-events: none;
+            background: var(--bg-light);
+        }
+        .blob {
+            position: absolute; filter: blur(90px); opacity: 0.6;
+            border-radius: 50%; animation: float 20s infinite ease-in-out alternate;
+        }
+        .blob-1 { width: 500px; height: 500px; background: #e0f2fe; top: -10%; left: -10%; animation-delay: 0s; }
+        .blob-2 { width: 400px; height: 400px; background: #dbeafe; bottom: -10%; right: -5%; animation-delay: -5s; }
+        .blob-3 { width: 600px; height: 600px; background: #f1f5f9; top: 40%; left: 30%; animation-delay: -10s; }
+
+        @keyframes float {
+            0% { transform: translate(0, 0) scale(1); }
+            50% { transform: translate(50px, 30px) scale(1.1); }
+            100% { transform: translate(-30px, 50px) scale(0.9); }
+        }
+
+        /* Nav Glassmorphism Premium */
         nav {
             position: fixed; top: 0; width: 100%; padding: 20px 5%; display: flex; justify-content: space-between; align-items: center;
-            background: var(--glass-bg); backdrop-filter: blur(20px); border-bottom: 1px solid var(--glass-border); z-index: 9999;
+            background: var(--glass-bg); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--glass-border); z-index: 9999;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.03);
         }
-        .logo-container img { height: 45px; filter: drop-shadow(0 0 15px rgba(0, 240, 255, 0.4)); transition: 0.4s ease; }
-        .nav-links a { color: var(--text-main); text-decoration: none; font-weight: 900; margin-left: 40px; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 3px; transition: 0.3s; position: relative; }
-        .nav-links a:hover { color: var(--neon-blue); }
+        .logo-container img { height: 40px; transition: 0.4s ease; }
+        .logo-container img:hover { transform: scale(1.05); }
+        
+        .nav-links a { 
+            color: var(--text-dark); text-decoration: none; font-weight: 600; margin-left: 40px; 
+            font-size: 0.85rem; text-transform: uppercase; letter-spacing: 2px; transition: 0.3s; position: relative; 
+        }
+        .nav-links a::after {
+            content: ''; position: absolute; width: 0; height: 2px; bottom: -5px; left: 0;
+            background-color: var(--accent-blue); transition: width 0.3s ease;
+        }
+        .nav-links a:hover::after { width: 100%; }
+        .nav-links a:hover { color: var(--accent-blue); }
 
         /* Hero */
         .hero { min-height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 0 20px; }
-        .hero h1 { font-family: 'Space Grotesk', sans-serif; font-size: clamp(3.5rem, 10vw, 7rem); font-weight: 900; line-height: 0.9; margin-bottom: 25px; text-shadow: 0 20px 40px rgba(0,0,0,0.8); letter-spacing: -2px; }
-        .hero h1 span { background: linear-gradient(90deg, var(--neon-blue), #0088ff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; filter: drop-shadow(0 0 30px rgba(0, 240, 255, 0.5)); }
-        .glow-button { padding: 20px 50px; font-size: 1.2rem; font-weight: 900; color: var(--bg-dark); background: var(--neon-blue); border: none; border-radius: 50px; cursor: pointer; text-transform: uppercase; letter-spacing: 2px; box-shadow: 0 0 30px rgba(0, 240, 255, 0.4); transition: 0.4s; text-decoration: none; display: inline-block; }
-        .glow-button:hover { box-shadow: 0 0 60px rgba(0, 240, 255, 0.8); transform: translateY(-5px); }
+        .hero h1 { 
+            font-family: 'Space Grotesk', sans-serif; font-size: clamp(3rem, 8vw, 6rem); font-weight: 900; 
+            line-height: 1; margin-bottom: 25px; color: var(--primary-blue); letter-spacing: -2px; 
+        }
+        .hero h1 span { color: var(--accent-blue); }
+        
+        .clean-button { 
+            padding: 20px 45px; font-size: 1.1rem; font-weight: 800; color: var(--bg-white); 
+            background: var(--primary-blue); border: none; border-radius: 50px; cursor: pointer; 
+            text-transform: uppercase; letter-spacing: 2px; box-shadow: 0 10px 20px rgba(26, 54, 93, 0.2); 
+            transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); text-decoration: none; display: inline-block; 
+        }
+        .clean-button:hover { 
+            background: var(--accent-blue); box-shadow: 0 15px 30px rgba(59, 130, 246, 0.3); transform: translateY(-5px); 
+        }
 
-        /* Mapa Section */
-        .map-section { padding: 100px 5%; text-align: center; background: rgba(3, 3, 5, 0.8); backdrop-filter: blur(10px); border-top: 1px solid var(--glass-border); }
-        .map-section h2 { font-family: 'Space Grotesk', sans-serif; font-size: 3.5rem; margin-bottom: 20px; }
-        .map-container { max-width: 1200px; height: 500px; margin: 40px auto; border-radius: 20px; overflow: hidden; border: 2px solid rgba(0, 240, 255, 0.2); box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8), 0 0 40px rgba(0, 240, 255, 0.1); position: relative; z-index: 10; }
-        #map { width: 100%; height: 100%; background: #0a0b10; }
+        /* Seções de Produto Clean */
+        .product-section { padding: 150px 5%; display: flex; align-items: center; justify-content: space-between; gap: 60px; min-height: 80vh; }
+        .product-section.reverse { flex-direction: row-reverse; }
+        
+        .product-content { flex: 1; max-width: 650px; }
+        .product-badge { 
+            display: inline-block; padding: 8px 20px; background: #e0f2fe; color: var(--accent-blue); 
+            border-radius: 30px; font-size: 0.8rem; font-weight: 800; letter-spacing: 2px; margin-bottom: 25px; 
+        }
+        .product-content h2 { font-family: 'Space Grotesk', sans-serif; font-size: 4rem; line-height: 1; margin-bottom: 25px; color: var(--primary-blue); }
+        .product-content p { font-size: 1.2rem; color: var(--text-muted); line-height: 1.8; margin-bottom: 50px; }
+
+        .features-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 25px; }
+        .feature-item { 
+            background: var(--bg-white); padding: 30px; border-radius: 20px; 
+            box-shadow: var(--shadow-soft); transition: 0.4s ease; border: 1px solid rgba(0,0,0,0.02);
+        }
+        .feature-item:hover { transform: translateY(-10px); box-shadow: var(--shadow-hover); }
+        .feature-item i { font-size: 28px; color: var(--accent-blue); margin-bottom: 15px; }
+        .feature-item h3 { font-size: 1.2rem; color: var(--text-dark); }
+
+        /* Mockups Visuais Minimalistas */
+        .product-visual { flex: 1; display: flex; justify-content: center; }
+        .mockup-box { 
+            width: 100%; max-width: 550px; height: 450px; background: var(--bg-white); 
+            border-radius: 40px; box-shadow: var(--shadow-soft); border: 1px solid rgba(0,0,0,0.03);
+            display: flex; align-items: center; justify-content: center; font-size: 6rem; position: relative; overflow: hidden;
+            transition: 0.5s ease;
+        }
+        .mockup-box:hover { transform: scale(1.02); box-shadow: var(--shadow-hover); }
+
+        /* Mapa Section Claro */
+        .map-section { padding: 100px 5%; text-align: center; position: relative; z-index: 10; }
+        .map-section h2 { font-family: 'Space Grotesk', sans-serif; font-size: 3.5rem; margin-bottom: 20px; color: var(--primary-blue); }
+        .map-container { 
+            max-width: 1200px; height: 500px; margin: 40px auto; border-radius: 25px; overflow: hidden; 
+            box-shadow: var(--shadow-soft); position: relative; z-index: 10; border: 10px solid var(--bg-white);
+        }
+        #map { width: 100%; height: 100%; background: #e5e7eb; }
 
         /* Contatos Premium */
         .contact-section { padding: 100px 20px; text-align: center; }
         .contact-grid { display: flex; justify-content: center; gap: 40px; margin-top: 50px; flex-wrap: wrap; }
-        .contact-card { background: rgba(10, 11, 16, 0.8); padding: 40px; border-radius: 20px; border: 1px solid var(--glass-border); width: 300px; transition: 0.4s; text-decoration: none; color: var(--text-main); }
-        .contact-card:hover { transform: translateY(-10px); border-color: var(--neon-blue); box-shadow: 0 10px 30px rgba(0, 240, 255, 0.15); }
-        .contact-card i { font-size: 40px; color: var(--neon-blue); margin-bottom: 20px; }
-        .contact-card h3 { font-size: 1.5rem; margin-bottom: 10px; }
+        .contact-card { 
+            background: var(--bg-white); padding: 40px; border-radius: 25px; box-shadow: var(--shadow-soft); 
+            width: 300px; transition: 0.4s; text-decoration: none; color: var(--text-dark); border: 1px solid rgba(0,0,0,0.02);
+        }
+        .contact-card:hover { transform: translateY(-10px); box-shadow: var(--shadow-hover); }
+        .contact-card i { font-size: 40px; color: var(--accent-blue); margin-bottom: 20px; }
+        .contact-card h3 { font-size: 1.5rem; margin-bottom: 10px; font-weight: 800; }
 
-        @media (max-width: 968px) { .nav-links { display: none; } }
+        /* Footer */
+        footer { text-align: center; padding: 40px 20px; color: var(--text-muted); font-size: 0.9rem; border-top: 1px solid rgba(0,0,0,0.05); }
+
+        /* Scroll Reveal Animations */
+        .hidden-element { opacity: 0; transform: translateY(50px); transition: all 1s cubic-bezier(0.22, 1, 0.36, 1); }
+        .show-element { opacity: 1; transform: translateY(0); }
+        .delay-1 { transition-delay: 0.15s; }
+        .delay-2 { transition-delay: 0.3s; }
+
+        @media (max-width: 968px) { 
+            .product-section, .product-section.reverse { flex-direction: column; text-align: center; }
+            .nav-links { display: none; }
+            .hero h1 { font-size: 3rem; }
+        }
     </style>
 </head>
 <body>
 
-    <!-- O Fundo Animado de Partículas -->
-    <canvas id="particles-canvas"></canvas>
+    <!-- Fundo Imersivo Clean -->
+    <div class="ambient-bg">
+        <div class="blob blob-1"></div>
+        <div class="blob blob-2"></div>
+        <div class="blob blob-3"></div>
+    </div>
 
     <nav>
         <div class="logo-container">
             <img src="Logo.png" alt="PrimeLogic Logo">
         </div>
         <div class="nav-links">
-            <a href="#mapa">Área de Cobertura</a>
-            <a href="#contato">Falar com a Diretoria</a>
+            <a href="#nextinline">NextInLine</a>
+            <a href="#primemenu">PrimeMenu</a>
+            <a href="#mapa">Cobertura</a>
+            <a href="#contato">Contato</a>
         </div>
     </nav>
 
-    <section class="hero">
-        <h1>SISTEMAS QUE<br><span>NUNCA DORMEM.</span></h1>
-        <p style="font-size: 1.4rem; color: var(--text-muted); max-width: 800px; margin: 20px auto 50px;">O limite é uma fronteira criada apenas pela mente. A PrimeLogic destrói gargalos com código bruto e tecnologia de elite.</p>
-        <a href="#mapa" class="glow-button">Ver Domínio no Mapa</a>
+    <section class="hero hidden-element">
+        <h1>TECNOLOGIA QUE<br><span>RESPIRA.</span></h1>
+        <p style="font-size: 1.3rem; color: var(--text-muted); max-width: 700px; margin: 20px auto 40px; font-weight: 400;">
+            Sistemas leves, fluidos e implacáveis. A PrimeLogic constrói a ponte entre a complexidade do código e a clareza da sua operação.
+        </p>
+        <a href="#nextinline" class="clean-button">Explorar Soluções</a>
     </section>
 
-    <!-- O MAPA INTERATIVO REAAAL -->
+    <!-- NEXTINLINE -->
+    <section id="nextinline" class="product-section">
+        <div class="product-content hidden-element">
+            <span class="product-badge">SAÚDE & GESTÃO</span>
+            <h2>NextInLine</h2>
+            <p>O caos na recepção acabou. Um sistema de gestão de filas ultrarrápido, projetado para transmitir tranquilidade e controle em ambientes de alto fluxo.</p>
+            
+            <div class="features-grid">
+                <div class="feature-item hidden-element delay-1">
+                    <i class="fa-solid fa-microchip"></i>
+                    <h3>Hardware Kiosk</h3>
+                    <p style="font-size: 0.95rem; color: var(--text-muted); margin-top: 5px;">A TV Box liga e foca apenas no sistema. Imune a falhas.</p>
+                </div>
+                <div class="feature-item hidden-element delay-2">
+                    <i class="fa-solid fa-server"></i>
+                    <h3>WebSockets API</h3>
+                    <p style="font-size: 0.95rem; color: var(--text-muted); margin-top: 5px;">Chamadas sincronizadas em milissegundos.</p>
+                </div>
+            </div>
+        </div>
+        <div class="product-visual hidden-element">
+            <div class="mockup-box">
+                <i class="fa-solid fa-display" style="color: var(--primary-blue);"></i>
+            </div>
+        </div>
+    </section>
+
+    <!-- PRIMEMENU -->
+    <section id="primemenu" class="product-section reverse">
+        <div class="product-content hidden-element">
+            <span class="product-badge">FOODTECH & ESCALA</span>
+            <h2>PrimeMenu</h2>
+            <p>Sua marca, suas regras. Um cardápio digital próprio conectado a um PDV fluido. Sem comissões que sugam o seu lucro. O cliente pede feliz e o seu caixa respira aliviado.</p>
+            
+            <div class="features-grid">
+                <div class="feature-item hidden-element delay-1">
+                    <i class="fa-brands fa-whatsapp"></i>
+                    <h3>Robô Zap</h3>
+                    <p style="font-size: 0.95rem; color: var(--text-muted); margin-top: 5px;">Aviso automático no bolso do seu cliente.</p>
+                </div>
+                <div class="feature-item hidden-element delay-2">
+                    <i class="fa-solid fa-chart-line"></i>
+                    <h3>Lucro Total</h3>
+                    <p style="font-size: 0.95rem; color: var(--text-muted); margin-top: 5px;">Você retém 100% do pedido. Independência de verdade.</p>
+                </div>
+            </div>
+        </div>
+        <div class="product-visual hidden-element">
+            <div class="mockup-box">
+                <i class="fa-solid fa-mobile-screen-button" style="color: var(--accent-blue);"></i>
+            </div>
+        </div>
+    </section>
+
+    <!-- MAPA CLEAN E ELEGANTE -->
     <section id="mapa" class="map-section">
-        <h2>DOMINANDO O MAPA.</h2>
-        <p style="font-size: 1.2rem; color: var(--text-muted);">A onda verde da PrimeLogic já tomou conta da região. Clique nos pinos.</p>
+        <h2 class="hidden-element">DOMINANDO O MAPA.</h2>
+        <p class="hidden-element" style="font-size: 1.2rem; color: var(--text-muted);">Transparência total. Clique nas cidades e veja nossa operação rodando lisa pelo Noroeste Paulista.</p>
         
-        <div class="map-container">
+        <div class="map-container hidden-element delay-1">
             <div id="map"></div>
         </div>
     </section>
 
     <!-- ÁREA DE CONTATO -->
-    <section id="contato" class="contact-section">
-        <h2 style="font-family: 'Space Grotesk'; font-size: 3.5rem;">CONECTE-SE.</h2>
+    <section id="contato" class="contact-section hidden-element">
+        <h2 style="font-family: 'Space Grotesk'; font-size: 3.5rem; color: var(--primary-blue);">CONECTE-SE.</h2>
         <div class="contact-grid">
-            <a href="https://wa.me/5517996181897" target="_blank" class="contact-card">
+            <a href="https://wa.me/5517996181897" target="_blank" class="contact-card hidden-element delay-1">
                 <i class="fa-brands fa-whatsapp"></i>
                 <h3>WhatsApp</h3>
                 <p style="color: var(--text-muted);">(17) 99618-1897</p>
-                <p style="color: var(--neon-blue); margin-top: 15px; font-weight: bold; font-size: 0.9rem;">CHAMAR AGORA ➔</p>
             </a>
-            <a href="https://instagram.com/primelogicoficial" target="_blank" class="contact-card">
+            <a href="https://instagram.com/primelogicoficial" target="_blank" class="contact-card hidden-element delay-2">
                 <i class="fa-brands fa-instagram"></i>
                 <h3>Instagram</h3>
                 <p style="color: var(--text-muted);">@primelogicoficial</p>
-                <p style="color: var(--neon-blue); margin-top: 15px; font-weight: bold; font-size: 0.9rem;">SEGUIR LÁ ➔</p>
             </a>
         </div>
     </section>
 
+    <footer>
+        <img src="Logo.png" alt="Logo Footer" height="25" style="filter: grayscale(100%) opacity(0.5); margin-bottom: 15px;">
+        <p>&copy; 2026 PrimeLogic Software House. A excelência mora nos detalhes.</p>
+    </footer>
+
     <!-- Scripts do Mapa Leaflet -->
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     
-    <!-- Script de Animação das Partículas e do Mapa -->
     <script>
-        // ==========================================
-        // 1. CONFIGURAÇÃO DO MAPA (LEAFLET)
-        // ==========================================
-        // Centralizado no Noroeste Paulista
-        var map = L.map('map').setView([-20.08, -50.45], 10);
+        // 1. SCROLL REVEAL (O que dá a vida e o dinamismo suave ao rolar a página)
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach((entry) => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('show-element');
+                }
+            });
+        }, { threshold: 0.15 });
 
-        // Mapa Dark/Cyberpunk (CartoDB Dark Matter)
-        L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
-            attribution: '&copy; PrimeLogic Tracker',
+        document.querySelectorAll('.hidden-element').forEach((el) => observer.observe(el));
+
+        // 2. CONFIGURAÇÃO DO MAPA CLEAN (Leaflet)
+        var map = L.map('map', { scrollWheelZoom: false }).setView([-20.08, -50.45], 10);
+
+        // Mapa Light Elegante (CartoDB Voyager)
+        L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
+            attribution: '&copy; PrimeLogic',
             maxZoom: 19
         }).addTo(map);
 
-        // Ícone personalizado pro pino do mapa
-        var primeIcon = L.divIcon({
+        // Ícone Minimalista (Bolinha azul escura com sombra suave)
+        var cleanIcon = L.divIcon({
             className: 'custom-div-icon',
-            html: "<div style='background-color:#00f0ff; width:15px; height:15px; border-radius:50%; box-shadow: 0 0 15px #00f0ff, 0 0 30px #00f0ff; border: 2px solid white;'></div>",
-            iconSize: [15, 15],
-            iconAnchor: [7, 7]
+            html: "<div style='background-color:#1A365D; width:16px; height:16px; border-radius:50%; box-shadow: 0 4px 10px rgba(26,54,93,0.5); border: 2px solid white; transition: 0.3s; transform-origin: center;'></div>",
+            iconSize: [16, 16],
+            iconAnchor: [8, 8]
         });
 
-        // Cidades Dominadas
         const cities = [
-            { name: "Turmalina", coords: [-20.266, -50.478], status: "Operação Total - NextInLine" },
-            { name: "Dolcinópolis", coords: [-20.121, -50.513], status: "Operação Total" },
-            { name: "Mira Estrela", coords: [-19.982, -50.146], status: "Operação Total" },
-            { name: "Populina", coords: [-19.932, -50.627], status: "Operação Total" },
-            { name: "Pedranópolis", coords: [-20.244, -50.011], status: "Operação Total" },
-            { name: "Mesópolis", coords: [-19.957, -50.871], status: "Operação Total" },
-            { name: "Ouroeste", coords: [-20.000, -50.375], status: "Nova Expansão 🔥" }
+            { name: "Turmalina", coords: [-20.266, -50.478], status: "NextInLine" },
+            { name: "Dolcinópolis", coords: [-20.121, -50.513], status: "Operação Ativa" },
+            { name: "Mira Estrela", coords: [-19.982, -50.146], status: "Operação Ativa" },
+            { name: "Populina", coords: [-19.932, -50.627], status: "Operação Ativa" },
+            { name: "Pedranópolis", coords: [-20.244, -50.011], status: "Operação Ativa" },
+            { name: "Mesópolis", coords: [-19.957, -50.871], status: "Operação Ativa" },
+            { name: "Ouroeste", coords: [-20.000, -50.375], status: "Em Expansão" }
         ];
 
-        // Plantando os alfinetes
         cities.forEach(city => {
-            L.marker(city.coords, {icon: primeIcon})
+            L.marker(city.coords, {icon: cleanIcon})
              .addTo(map)
-             .bindPopup(`<strong style="color:#1A365D; font-size:16px;">${city.name}</strong><br>${city.status}`);
+             .bindPopup(`<div style="text-align: center;"><strong style="color:#1A365D; font-size:15px; font-family:'Inter', sans-serif;">${city.name}</strong><br><span style="color:#64748b; font-family:'Inter', sans-serif; font-size: 13px;">${city.status}</span></div>`);
         });
-
-
-        // ==========================================
-        // 2. FUNDO ANIMADO (PARTÍCULAS NEURAIS)
-        // ==========================================
-        const canvas = document.getElementById('particles-canvas');
-        const ctx = canvas.getContext('2d');
-        canvas.width = window.innerWidth; canvas.height = window.innerHeight;
-
-        let particlesArray = [];
-        let mouse = { x: null, y: null, radius: 150 };
-
-        window.addEventListener('mousemove', function(event) {
-            mouse.x = event.x; mouse.y = event.y;
-        });
-
-        window.addEventListener('mouseout', function() {
-            mouse.x = undefined; mouse.y = undefined;
-        });
-
-        class Particle {
-            constructor(x, y, directionX, directionY, size, color) {
-                this.x = x; this.y = y; this.directionX = directionX; this.directionY = directionY;
-                this.size = size; this.color = color;
-            }
-            draw() {
-                ctx.beginPath(); ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2, false);
-                ctx.fillStyle = '#00f0ff'; ctx.fill();
-            }
-            update() {
-                if (this.x > canvas.width || this.x < 0) this.directionX = -this.directionX;
-                if (this.y > canvas.height || this.y < 0) this.directionY = -this.directionY;
-                this.x += this.directionX; this.y += this.directionY;
-                this.draw();
-            }
-        }
-
-        function init() {
-            particlesArray = [];
-            let numberOfParticles = (canvas.height * canvas.width) / 12000;
-            for (let i = 0; i < numberOfParticles; i++) {
-                let size = (Math.random() * 2) + 1;
-                let x = (Math.random() * ((innerWidth - size * 2) - (size * 2)) + size * 2);
-                let y = (Math.random() * ((innerHeight - size * 2) - (size * 2)) + size * 2);
-                let directionX = (Math.random() * 2) - 1.5;
-                let directionY = (Math.random() * 2) - 1.5;
-                let color = '#00f0ff';
-                particlesArray.push(new Particle(x, y, directionX, directionY, size, color));
-            }
-        }
-
-        function connect() {
-            let opacityValue = 1;
-            for (let a = 0; a < particlesArray.length; a++) {
-                for (let b = a; b < particlesArray.length; b++) {
-                    let distance = ((particlesArray[a].x - particlesArray[b].x) * (particlesArray[a].x - particlesArray[b].x)) + 
-                                   ((particlesArray[a].y - particlesArray[b].y) * (particlesArray[a].y - particlesArray[b].y));
-                    if (distance < (canvas.width / 7) * (canvas.height / 7)) {
-                        opacityValue = 1 - (distance / 20000);
-                        ctx.strokeStyle = 'rgba(0, 240, 255,' + opacityValue + ')';
-                        ctx.lineWidth = 1;
-                        ctx.beginPath();
-                        ctx.moveTo(particlesArray[a].x, particlesArray[a].y);
-                        ctx.lineTo(particlesArray[b].x, particlesArray[b].y);
-                        ctx.stroke();
-                    }
-                }
-                
-                // Conecta com o mouse
-                if (mouse.x != null && mouse.y != null) {
-                    let dx = mouse.x - particlesArray[a].x;
-                    let dy = mouse.y - particlesArray[a].y;
-                    let distanceToMouse = dx*dx + dy*dy;
-                    if (distanceToMouse < mouse.radius * mouse.radius) {
-                        ctx.strokeStyle = 'rgba(0, 240, 255,' + (1 - distanceToMouse/(mouse.radius*mouse.radius)) + ')';
-                        ctx.lineWidth = 1.5;
-                        ctx.beginPath();
-                        ctx.moveTo(particlesArray[a].x, particlesArray[a].y);
-                        ctx.lineTo(mouse.x, mouse.y);
-                        ctx.stroke();
-                    }
-                }
-            }
-        }
-
-        function animate() {
-            requestAnimationFrame(animate);
-            ctx.clearRect(0, 0, innerWidth, innerHeight);
-            for (let i = 0; i < particlesArray.length; i++) { particlesArray[i].update(); }
-            connect();
-        }
-
-        window.addEventListener('resize', function() {
-            canvas.width = innerWidth; canvas.height = innerHeight;
-            init();
-        });
-
-        init(); animate();
     </script>
 </body>
 </html>
