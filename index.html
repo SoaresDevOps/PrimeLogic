@@ -3,276 +3,264 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PrimeLogic | Expandindo Limites</title>
+    <title>PrimeLogic | Atitude em Código</title>
     <!-- Fontes Premium -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Space+Grotesk:wght@700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;500;800;900&family=Space+Grotesk:wght@900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     
     <style>
         :root {
-            --bg-base: #f0f4f8;
-            --primary-deep: #1A365D;
-            --accent-glow: #2563eb;
-            --accent-cyan: #06b6d4;
+            --bg-base: #f8f9fa;
+            --primary-deep: #0f172a; /* Quase preto */
+            --accent-glow: #2563eb; /* Azul Prime */
+            --accent-cyan: #00f0ff;
             --text-heavy: #0f172a;
             --text-p: #475569;
-            --glass: rgba(255, 255, 255, 0.6);
-            --glass-border: rgba(255, 255, 255, 0.8);
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; scroll-behavior: smooth; }
-        
         body { background-color: var(--bg-base); color: var(--text-heavy); overflow-x: hidden; }
 
-        /* Fundo Impressionista e Espacial (Mesh Gradient Animado) */
-        .spatial-background {
-            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: -2;
-            background: linear-gradient(120deg, #f0f4f8, #e0e7ff, #cffafe);
-            background-size: 400% 400%;
-            animation: spaceBreathe 20s ease infinite;
-        }
-        @keyframes spaceBreathe {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
+        /* FUNDO VIVO E DINÂMICO (CANVAS) */
+        #live-background {
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: -1;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e2e8f0 100%);
         }
 
-        /* Nav Enxuta e Escalável */
+        /* NAVEGAÇÃO FORA DO PADRÃO */
         nav {
-            position: fixed; top: 0; width: 100%; padding: 20px 5%; display: flex; justify-content: space-between; align-items: center;
-            background: rgba(255, 255, 255, 0.7); backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px);
-            border-bottom: 1px solid var(--glass-border); z-index: 100; box-shadow: 0 10px 30px rgba(0,0,0,0.03);
+            position: fixed; top: 0; width: 100%; padding: 25px 5%; display: flex; justify-content: space-between; align-items: center;
+            background: rgba(248, 249, 250, 0.8); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
+            z-index: 100; border-bottom: 2px solid var(--primary-deep);
         }
-        .logo-container img { height: 45px; transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
-        .logo-container img:hover { transform: scale(1.1) rotate(-2deg); }
+        .logo-container img { height: 45px; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.1)); }
         
-        .nav-links { display: flex; gap: 40px; }
+        .nav-links { display: flex; gap: 40px; align-items: center; }
         .nav-links a { 
-            color: var(--primary-deep); text-decoration: none; font-weight: 800; font-size: 0.85rem; 
-            text-transform: uppercase; letter-spacing: 2px; position: relative; padding: 5px 0;
+            color: var(--primary-deep); text-decoration: none; font-weight: 900; font-size: 0.9rem; 
+            text-transform: uppercase; letter-spacing: 1px; position: relative;
         }
-        .nav-links a::after {
-            content: ''; position: absolute; width: 0; height: 2px; bottom: 0; left: 0;
-            background: linear-gradient(90deg, var(--accent-glow), var(--accent-cyan)); transition: width 0.4s ease;
+        .nav-links a:hover { color: var(--accent-glow); }
+        .nav-btn {
+            background: var(--primary-deep); color: #fff !important; padding: 10px 25px; border-radius: 50px; transition: 0.3s;
         }
-        .nav-links a:hover::after { width: 100%; }
+        .nav-btn:hover { background: var(--accent-glow); box-shadow: 0 10px 20px rgba(37, 99, 235, 0.3); transform: translateY(-2px); }
 
-        /* Hero Monumental */
-        .hero { min-height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 0 20px; position: relative; perspective: 1000px; }
-        .hero-content { transform-style: preserve-3d; animation: floatHero 6s ease-in-out infinite alternate; }
-        @keyframes floatHero { from { transform: translateY(0px); } to { transform: translateY(-15px); } }
-        
-        .hero h1 { font-family: 'Space Grotesk', sans-serif; font-size: clamp(4rem, 10vw, 7.5rem); font-weight: 900; line-height: 0.9; color: var(--primary-deep); letter-spacing: -3px; margin-bottom: 30px; text-shadow: 0 20px 40px rgba(26,54,93,0.1); }
-        .hero h1 span { background: linear-gradient(135deg, var(--accent-glow), var(--accent-cyan)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .hero p { font-size: 1.4rem; color: var(--text-p); max-width: 800px; margin: 0 auto 50px; font-weight: 400; line-height: 1.7; }
-        
-        /* Serviço Personalizado (DNA da Empresa) */
-        .custom-service { padding: 120px 5%; background: rgba(255,255,255,0.4); backdrop-filter: blur(10px); border-top: 1px solid var(--glass-border); border-bottom: 1px solid var(--glass-border); text-align: center; }
-        .custom-service h2 { font-family: 'Space Grotesk', sans-serif; font-size: 3.5rem; color: var(--primary-deep); margin-bottom: 30px; }
-        .custom-service-grid { display: flex; flex-wrap: wrap; justify-content: center; gap: 40px; max-width: 1200px; margin: 50px auto 0; text-align: left; }
-        .custom-box { flex: 1; min-width: 300px; background: var(--glass); padding: 40px; border-radius: 30px; box-shadow: 0 20px 50px rgba(0,0,0,0.03); border: 1px solid var(--glass-border); transition: 0.5s; }
-        .custom-box:hover { transform: translateY(-10px); box-shadow: 0 30px 60px rgba(37, 99, 235, 0.1); }
-        .custom-box i { font-size: 2.5rem; color: var(--accent-glow); margin-bottom: 20px; }
-        .custom-box h3 { font-size: 1.5rem; margin-bottom: 15px; color: var(--primary-deep); }
-
-        /* Produtos e Efeito Espacial 3D */
-        .products-section { padding: 150px 5%; position: relative; }
-        .section-header { text-align: center; margin-bottom: 80px; }
-        .section-header h2 { font-family: 'Space Grotesk', sans-serif; font-size: 4rem; color: var(--primary-deep); }
-        
-        .products-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 50px; max-width: 1400px; margin: 0 auto; perspective: 1000px; }
-        
-        /* Card 3D Impressionista */
-        .product-card { 
-            background: rgba(255,255,255,0.8); backdrop-filter: blur(20px); border-radius: 40px; padding: 50px; 
-            border: 1px solid rgba(255,255,255,1); box-shadow: 0 30px 60px rgba(0,0,0,0.05);
-            transform-style: preserve-3d; transition: transform 0.1s ease, box-shadow 0.3s ease; cursor: pointer;
-            position: relative; overflow: hidden;
+        /* HERO - O GRITO INICIAL */
+        .hero { 
+            min-height: 100vh; display: flex; flex-direction: column; justify-content: center; padding: 0 5%; 
+            position: relative;
         }
-        .product-card::before {
-            content: ''; position: absolute; top: 0; left: -100%; width: 50%; height: 100%;
-            background: linear-gradient(to right, transparent, rgba(255,255,255,0.8), transparent);
-            transform: skewX(-20deg); transition: 0.5s;
+        .hero h1 { 
+            font-family: 'Space Grotesk', sans-serif; font-size: clamp(4rem, 12vw, 9rem); font-weight: 900; 
+            line-height: 0.85; color: var(--primary-deep); letter-spacing: -4px; margin-bottom: 30px; text-transform: uppercase;
         }
-        .product-card:hover::before { left: 150%; }
-        .product-card:hover { box-shadow: 0 50px 100px rgba(37, 99, 235, 0.15); }
-        
-        .card-content { transform: translateZ(50px); /* Traz o texto pra frente do fundo no 3D */ }
-        .product-card h3 { font-family: 'Space Grotesk', sans-serif; font-size: 2.5rem; color: var(--primary-deep); margin-bottom: 15px; }
-        .product-card p { font-size: 1.1rem; color: var(--text-p); margin-bottom: 30px; }
-        .view-btn { background: var(--primary-deep); color: white; border: none; padding: 15px 30px; border-radius: 30px; font-weight: bold; text-transform: uppercase; letter-spacing: 1px; cursor: pointer; pointer-events: none; }
+        .hero h1 span { 
+            display: block; color: transparent; -webkit-text-stroke: 2px var(--primary-deep);
+            background: url('https://media.giphy.com/media/xT9IgzoKnwFNmISR8I/giphy.gif'); /* Efeito de ruído/estática sutil no texto */
+            -webkit-background-clip: text; background-size: cover;
+        }
+        .hero p { 
+            font-size: 1.5rem; color: var(--text-p); max-width: 600px; font-weight: 500; line-height: 1.6; border-left: 5px solid var(--accent-glow); padding-left: 20px;
+        }
 
-        /* Modais (Abertura do Produto Específico) */
+        /* SEÇÃO DE CONTRATAÇÃO (SOB MEDIDA) - ASSIMÉTRICA */
+        .hire-us {
+            padding: 150px 5%; background: var(--primary-deep); color: #fff; position: relative; overflow: hidden;
+        }
+        .hire-us::before {
+            content: 'CÓDIGO BRUTO'; position: absolute; font-family: 'Space Grotesk'; font-size: 15vw; 
+            color: rgba(255,255,255,0.02); top: -50px; left: -20px; white-space: nowrap; pointer-events: none;
+        }
+        .hire-grid { display: flex; flex-wrap: wrap; gap: 50px; align-items: center; justify-content: space-between; position: relative; z-index: 10; }
+        .hire-text { flex: 1; min-width: 300px; }
+        .hire-text h2 { font-family: 'Space Grotesk', sans-serif; font-size: 4rem; line-height: 1; margin-bottom: 20px; }
+        .hire-text h2 span { color: var(--accent-cyan); }
+        .hire-text p { font-size: 1.3rem; color: #cbd5e1; margin-bottom: 40px; line-height: 1.7; max-width: 500px; }
+        
+        .hire-cards { flex: 1; display: grid; gap: 20px; min-width: 300px; }
+        .h-card { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); padding: 40px; border-radius: 0 40px 0 40px; transition: 0.4s; backdrop-filter: blur(10px); }
+        .h-card:hover { transform: translateX(-10px); border-color: var(--accent-cyan); background: rgba(0, 240, 255, 0.05); }
+        .h-card h3 { font-size: 1.8rem; margin-bottom: 10px; color: var(--accent-cyan); font-family: 'Space Grotesk'; }
+        
+        .giant-btn { 
+            display: inline-block; background: var(--accent-cyan); color: var(--primary-deep); padding: 20px 50px; 
+            font-size: 1.5rem; font-weight: 900; text-transform: uppercase; text-decoration: none; border-radius: 5px;
+            box-shadow: 10px 10px 0px var(--accent-glow); transition: 0.2s; border: 2px solid var(--primary-deep);
+        }
+        .giant-btn:active { box-shadow: 0px 0px 0px var(--accent-glow); transform: translate(10px, 10px); }
+
+        /* OS HITS (PRODUTOS PRONTOS) */
+        .products { padding: 150px 5%; position: relative; }
+        .products-title { font-family: 'Space Grotesk'; font-size: 5rem; color: var(--primary-deep); margin-bottom: 80px; text-align: right; line-height: 1; }
+        
+        .product-showcase { display: flex; flex-wrap: wrap; gap: 40px; }
+        .prod-box { 
+            flex: 1; min-width: 350px; background: rgba(255,255,255,0.7); backdrop-filter: blur(20px); 
+            border: 3px solid var(--primary-deep); padding: 50px; position: relative;
+            box-shadow: 15px 15px 0px rgba(15, 23, 42, 0.1); transition: 0.3s;
+        }
+        .prod-box:hover { transform: translateY(-10px); box-shadow: 25px 25px 0px rgba(37, 99, 235, 0.2); border-color: var(--accent-glow); }
+        .prod-icon { font-size: 4rem; color: var(--primary-deep); margin-bottom: 20px; }
+        .prod-box h3 { font-family: 'Space Grotesk'; font-size: 3rem; margin-bottom: 15px; color: var(--primary-deep); }
+        .prod-box p { font-size: 1.1rem; color: var(--text-p); margin-bottom: 30px; font-weight: 500; }
+        .prod-btn { background: none; border: 2px solid var(--primary-deep); color: var(--primary-deep); padding: 12px 30px; font-weight: 900; cursor: pointer; text-transform: uppercase; transition: 0.3s; }
+        .prod-btn:hover { background: var(--primary-deep); color: #fff; }
+
+        /* MAPA BRUTALISTA */
+        .map-section { padding: 100px 5%; background: var(--primary-deep); border-top: 5px solid var(--accent-cyan); }
+        .map-title { font-family: 'Space Grotesk'; font-size: 3rem; color: #fff; margin-bottom: 40px; }
+        #map { width: 100%; height: 500px; filter: grayscale(80%) contrast(120%); border: 2px solid rgba(255,255,255,0.1); }
+
+        /* FOOTER / CONTATO DE IMPACTO */
+        footer { padding: 100px 5% 50px; text-align: center; background: var(--bg-base); position: relative; }
+        footer h2 { font-family: 'Space Grotesk'; font-size: 6rem; color: var(--primary-deep); line-height: 0.9; margin-bottom: 50px; letter-spacing: -2px; }
+        .contact-links { display: flex; justify-content: center; gap: 20px; flex-wrap: wrap; margin-bottom: 80px; }
+        .c-link { 
+            font-size: 1.5rem; font-weight: 900; color: var(--primary-deep); text-decoration: none; 
+            border: 3px solid var(--primary-deep); padding: 20px 40px; text-transform: uppercase; transition: 0.3s;
+        }
+        .c-link:hover { background: var(--primary-deep); color: #fff; transform: skewX(-10deg); }
+
+        /* MODAIS (Estilo Pop-up Brutalista) */
         .modal-overlay {
-            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(15, 23, 42, 0.4);
-            backdrop-filter: blur(15px); z-index: 1000; display: flex; justify-content: center; align-items: center;
-            opacity: 0; pointer-events: none; transition: opacity 0.4s ease;
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.8);
+            backdrop-filter: blur(10px); z-index: 9999; display: flex; justify-content: center; align-items: center;
+            opacity: 0; pointer-events: none; transition: 0.3s ease;
         }
         .modal-overlay.active { opacity: 1; pointer-events: all; }
         
         .modal-content {
-            background: white; width: 90%; max-width: 1000px; max-height: 90vh; border-radius: 40px;
-            padding: 60px; position: relative; overflow-y: auto; transform: scale(0.9) translateY(50px);
-            transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); box-shadow: 0 50px 100px rgba(0,0,0,0.2);
+            background: var(--bg-base); width: 90%; max-width: 900px; border: 5px solid var(--primary-deep);
+            padding: 50px; position: relative; transform: scale(0.95); transition: 0.3s;
+            box-shadow: 20px 20px 0px var(--accent-glow);
         }
-        .modal-overlay.active .modal-content { transform: scale(1) translateY(0); }
+        .modal-overlay.active .modal-content { transform: scale(1); }
         
-        .close-modal { position: absolute; top: 30px; right: 40px; font-size: 2rem; color: var(--primary-deep); cursor: pointer; background: none; border: none; font-weight: bold; }
+        .close-modal { position: absolute; top: 20px; right: 30px; font-size: 3rem; color: var(--primary-deep); cursor: pointer; background: none; border: none; font-weight: 900; line-height: 1; }
         .close-modal:hover { color: var(--accent-glow); }
 
-        .modal-header { display: flex; align-items: center; gap: 30px; margin-bottom: 40px; border-bottom: 2px solid #f1f5f9; padding-bottom: 30px; }
-        .modal-header h2 { font-family: 'Space Grotesk', sans-serif; font-size: 3.5rem; color: var(--primary-deep); }
-        
-        .offer-tag { background: linear-gradient(135deg, #10b981, #059669); color: white; padding: 10px 20px; border-radius: 30px; font-weight: 900; letter-spacing: 1px; font-size: 1.1rem; box-shadow: 0 10px 20px rgba(16, 185, 129, 0.3); display: inline-block; margin-bottom: 20px;}
-        
-        .modal-body p { font-size: 1.2rem; color: var(--text-p); line-height: 1.8; margin-bottom: 20px; }
-        .modal-features { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin-top: 40px; }
-        .m-feature { background: #f8fafc; padding: 25px; border-radius: 20px; border: 1px solid #e2e8f0; }
-        .m-feature h4 { color: var(--primary-deep); font-size: 1.3rem; margin-bottom: 10px; }
-
-        .cta-btn { display: block; width: 100%; text-align: center; background: var(--primary-deep); color: white; padding: 20px; border-radius: 20px; font-size: 1.5rem; font-weight: 900; text-decoration: none; margin-top: 40px; transition: 0.3s; }
-        .cta-btn:hover { background: var(--accent-glow); transform: translateY(-5px); box-shadow: 0 20px 40px rgba(37,99,235,0.3); }
-
-        /* Mapa e Contato */
-        .map-section { padding: 100px 5%; text-align: center; background: rgba(255,255,255,0.3); backdrop-filter: blur(10px); }
-        #map { width: 100%; max-width: 1200px; height: 500px; margin: 40px auto; border-radius: 40px; border: 5px solid white; box-shadow: 0 30px 60px rgba(0,0,0,0.1); }
-        footer { padding: 40px; text-align: center; background: var(--primary-deep); color: white; }
+        .m-title { font-family: 'Space Grotesk'; font-size: 4rem; color: var(--primary-deep); margin-bottom: 10px; line-height: 1; }
+        .m-tag { display: inline-block; background: var(--primary-deep); color: #fff; padding: 5px 15px; font-weight: 900; text-transform: uppercase; margin-bottom: 30px; }
+        .m-offer { background: #10b981; color: #fff; padding: 15px; border-left: 10px solid #047857; font-size: 1.2rem; font-weight: 800; margin-bottom: 30px; }
+        .m-text { font-size: 1.2rem; line-height: 1.6; margin-bottom: 20px; color: var(--text-p); }
+        .m-btn { display: block; width: 100%; text-align: center; background: var(--accent-glow); color: #fff; padding: 20px; font-size: 1.5rem; font-weight: 900; text-decoration: none; border: 3px solid var(--primary-deep); margin-top: 40px; transition: 0.2s; box-shadow: 8px 8px 0px var(--primary-deep); }
+        .m-btn:hover { transform: translate(4px, 4px); box-shadow: 4px 4px 0px var(--primary-deep); }
 
         @media (max-width: 968px) {
             .nav-links { display: none; }
-            .hero h1 { font-size: 3.5rem; }
-            .modal-features { grid-template-columns: 1fr; }
-            .modal-content { padding: 40px 20px; }
+            .hero h1 { font-size: 4rem; }
+            .hire-text h2 { font-size: 3rem; }
+            .products-title { font-size: 3.5rem; text-align: left; }
+            footer h2 { font-size: 3.5rem; }
         }
     </style>
 </head>
 <body>
 
-    <div class="spatial-background"></div>
+    <!-- O CORAÇÃO DO SITE: FUNDO VIVO E DINÂMICO -->
+    <canvas id="live-background"></canvas>
 
     <nav>
         <div class="logo-container">
             <img src="Logo.png" alt="PrimeLogic Logo">
         </div>
         <div class="nav-links">
-            <a href="#home">Home</a>
-            <a href="#produtos">Produtos</a>
-            <a href="#custom">Sob Medida</a>
-            <a href="#cobertura">Cobertura</a>
-            <a href="#contato">Contato</a>
+            <a href="#solucoes">Ecossistema</a>
+            <a href="#sobmedida">Fábrica de Software</a>
+            <a href="#cobertura">Mapa</a>
+            <a href="#contato" class="nav-btn">Bora Pra Cima</a>
         </div>
     </nav>
 
-    <section id="home" class="hero">
-        <div class="hero-content">
-            <h1>O IMPOSSÍVEL É SÓ<br><span>QUESTÃO DE OPINIÃO.</span></h1>
-            <p>Não viemos pra ser mais um sistema na sua tela. Nós somos a engenharia por trás do seu crescimento. Sistemas imersivos, implacáveis e desenhados para dominar.</p>
+    <!-- O GRITO INICIAL -->
+    <section class="hero">
+        <h1>O IMPOSSÍVEL É<br><span>SÓ QUESTÃO DE</span><br>OPINIÃO.</h1>
+        <p>Esqueça os padrões. Nós somos a engenharia bruta por trás do seu crescimento. Sistemas imersivos, implacáveis e construídos com a atitude de quem domina o mercado.</p>
+    </section>
+
+    <!-- SEÇÃO PESADA DE CONTRATAÇÃO (SOB MEDIDA) -->
+    <section id="sobmedida" class="hire-us">
+        <div class="hire-grid">
+            <div class="hire-text">
+                <h2>CÓDIGO FEITO<br><span>PARA A SUA DOR.</span></h2>
+                <p>Nós não empurramos sistemas de prateleira goela abaixo. A PrimeLogic opera como a sua própria fábrica de software. Você traz o gargalo da sua empresa, nós desenhamos a arquitetura, afinamos a tecnologia e entregamos a solução definitiva.</p>
+                <a href="https://wa.me/5517996181897?text=Quero%20apresentar%20um%20projeto%20para%20a%20PrimeLogic!" target="_blank" class="giant-btn">CONTRATAR A PRIMELOGIC</a>
+            </div>
+            <div class="hire-cards">
+                <div class="h-card">
+                    <h3>01. Imersão</h3>
+                    <p style="color: #94a3b8; font-size: 1.1rem;">Entendemos o seu negócio a fundo. Mapeamos onde você perde tempo e dinheiro.</p>
+                </div>
+                <div class="h-card">
+                    <h3>02. Arquitetura</h3>
+                    <p style="color: #94a3b8; font-size: 1.1rem;">Construímos soluções exclusivas usando nuvem, bancos de dados parrudas e integrações absolutas.</p>
+                </div>
+                <div class="h-card">
+                    <h3>03. Execução</h3>
+                    <p style="color: #94a3b8; font-size: 1.1rem;">Implementação rápida, treinamento e suporte direto. A gente não te abandona no palco.</p>
+                </div>
+            </div>
         </div>
     </section>
 
-    <!-- SERVIÇO SOB MEDIDA -->
-    <section id="custom" class="custom-service">
-        <h2>TECNOLOGIA SOB MEDIDA</h2>
-        <p style="font-size: 1.3rem; color: var(--text-p); max-width: 800px; margin: 0 auto;">Sua operação é única, seu software também deve ser. A PrimeLogic atua como a sua arquitetura de tecnologia particular. Nós não te vendemos o que temos, nós construímos exatamente o que você precisa.</p>
+    <!-- OS HITS (PRODUTOS EXISTENTES) -->
+    <section id="solucoes" class="products">
+        <h2 class="products-title">OS NOSSOS HITS.<br>PRONTOS PRA RODAR.</h2>
         
-        <div class="custom-service-grid">
-            <div class="custom-box">
-                <i class="fa-solid fa-code"></i>
-                <h3>Sistemas Exclusivos</h3>
-                <p>Do rascunho ao código bruto. Desenvolvemos ecossistemas inteiros baseados na rotina e nas dores da sua empresa. Sem remendos.</p>
-            </div>
-            <div class="custom-box">
-                <i class="fa-solid fa-rocket"></i>
-                <h3>Escala Absoluta</h3>
-                <p>Aplicações preparadas para crescer junto com você. Nuvem, bancos de dados parrudas e integrações sem limites.</p>
-            </div>
-        </div>
-    </section>
-
-    <!-- PRODUTOS -->
-    <section id="produtos" class="products-section">
-        <div class="section-header">
-            <h2>ECOSSISTEMA PRIMELOGIC</h2>
-            <p style="font-size: 1.2rem; color: var(--text-p);">Selecione um módulo para expandir.</p>
-        </div>
-
-        <div class="products-grid">
-            <!-- Card NextInLine -->
-            <div class="product-card tilt-card" onclick="openModal('nextinline')">
-                <div class="card-content">
-                    <i class="fa-solid fa-users-viewfinder" style="font-size: 3rem; color: var(--accent-glow); margin-bottom: 20px;"></i>
-                    <h3>NextInLine</h3>
-                    <p>Controle absoluto de filas e recepção. Hardware dedicado e gestão em milissegundos.</p>
-                    <button class="view-btn">Expandir Módulo</button>
-                </div>
+        <div class="product-showcase">
+            <div class="prod-box">
+                <i class="fa-solid fa-users-viewfinder prod-icon"></i>
+                <h3>NextInLine</h3>
+                <p>Controle absoluto de filas e recepção em milissegundos. Esqueça as quedas e os travamentos. O caos no seu balcão de atendimento termina hoje.</p>
+                <button class="prod-btn" onclick="openModal('nextinline')">Ver Condições Especiais</button>
             </div>
 
-            <!-- Card PrimeMenu -->
-            <div class="product-card tilt-card" onclick="openModal('primemenu')">
-                <div class="card-content">
-                    <i class="fa-solid fa-mobile-button" style="font-size: 3rem; color: var(--accent-cyan); margin-bottom: 20px;"></i>
-                    <h3>PrimeMenu</h3>
-                    <p>O seu cardápio, a sua liberdade. Plataforma white-label para dominar o delivery.</p>
-                    <button class="view-btn">Expandir Módulo</button>
-                </div>
+            <div class="prod-box">
+                <i class="fa-solid fa-burger prod-icon"></i>
+                <h3>PrimeMenu</h3>
+                <p>A alforria das lanchonetes. O seu cardápio próprio, conectado ao WhatsApp. O cliente pede feliz e você não deixa 27% do seu lucro na mão de ninguém.</p>
+                <button class="prod-btn" onclick="openModal('primemenu')">Ver Condições Especiais</button>
             </div>
         </div>
     </section>
 
     <!-- MAPA -->
     <section id="cobertura" class="map-section">
-        <h2 style="font-family: 'Space Grotesk'; font-size: 3.5rem; color: var(--primary-deep);">NOSSA ÁREA DE DOMÍNIO</h2>
+        <h2 class="map-title">ONDE A BANDA TOCA.</h2>
         <div id="map"></div>
     </section>
 
-    <!-- FOOTER E CONTATO -->
+    <!-- FOOTER MATADOR -->
     <footer id="contato">
-        <h2 style="font-family: 'Space Grotesk'; font-size: 2.5rem; margin-bottom: 30px;">TÂMO NA ATIVIDADE.</h2>
-        <p style="font-size: 1.2rem; margin-bottom: 20px;">Fale com a diretoria agora e assuma o controle.</p>
-        <a href="https://wa.me/5517996181897" target="_blank" style="display: inline-block; background: #25D366; color: white; padding: 15px 40px; border-radius: 30px; font-weight: bold; text-decoration: none; font-size: 1.2rem; margin: 10px;">
-            <i class="fa-brands fa-whatsapp"></i> (17) 99618-1897
-        </a>
-        <a href="https://instagram.com/primelogicoficial" target="_blank" style="display: inline-block; background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%); color: white; padding: 15px 40px; border-radius: 30px; font-weight: bold; text-decoration: none; font-size: 1.2rem; margin: 10px;">
-            <i class="fa-brands fa-instagram"></i> @primelogicoficial
-        </a>
-        <div style="margin-top: 50px; opacity: 0.5;">
-            <img src="Logo.png" alt="PrimeLogic" height="30">
-            <p>&copy; 2026 PrimeLogic. Dias de luta, dias de glória.</p>
+        <h2>PRONTO PRA FAZER<br>BARULHO?</h2>
+        <div class="contact-links">
+            <a href="https://wa.me/5517996181897" target="_blank" class="c-link"><i class="fa-brands fa-whatsapp"></i> Chamar no Zap</a>
+            <a href="https://instagram.com/primelogicoficial" target="_blank" class="c-link"><i class="fa-brands fa-instagram"></i> Seguir no Insta</a>
         </div>
+        <img src="Logo.png" alt="PrimeLogic" height="40" style="margin-bottom: 20px;">
+        <p style="color: var(--text-p); font-weight: 600;">&copy; 2026 PrimeLogic. Desenvolvendo o futuro com atitude.</p>
     </footer>
 
 
-    <!-- ================= MODAIS DE PRODUTOS ================= -->
+    <!-- ================= MODAIS DOS PRODUTOS ================= -->
 
     <!-- Modal NextInLine -->
     <div class="modal-overlay" id="modal-nextinline">
         <div class="modal-content">
             <button class="close-modal" onclick="closeModals()">×</button>
-            <div class="modal-header">
-                <i class="fa-solid fa-users-viewfinder" style="font-size: 4rem; color: var(--accent-glow);"></i>
-                <div>
-                    <h2>NextInLine</h2>
-                    <span style="color: var(--text-p); font-size: 1.2rem; text-transform: uppercase; letter-spacing: 2px;">Gestão de Alto Desempenho</span>
-                </div>
+            <h2 class="m-title">NextInLine</h2>
+            <div class="m-tag">Gestão de Alto Desempenho</div>
+            
+            <div class="m-offer">
+                APARELHO DO SISTEMA TOTALMENTE GRÁTIS + 3 MESES NA FAIXA!
             </div>
-            <div class="modal-body">
-                <div class="offer-tag">APARELHO DO SISTEMA TOTALMENTE GRÁTIS + 3 MESES NA FAIXA!</div>
-                <p>Nós não entregamos só um site para você abrir na sua clínica ou prefeitura. Nós entregamos o <strong>equipamento oficial da PrimeLogic</strong>. O aparelho do sistema já vem blindado e configurado: é plugar na TV e a sua operação muda de nível na hora.</p>
-                <p>Para você sentir o peso e a qualidade da nossa infraestrutura, o equipamento é por nossa conta, e a gente te dá <strong>3 meses de serviço totalmente gratuitos</strong> para rodar a operação sem amarras.</p>
-                
-                <div class="modal-features">
-                    <div class="m-feature">
-                        <h4>Kiosk Mode Ativo</h4>
-                        <p>O aparelho não permite desvios. Ele liga e tranca na tela de chamadas. Segurança corporativa total.</p>
-                    </div>
-                    <div class="m-feature">
-                        <h4>WebSockets API</h4>
-                        <p>Sem atrasos. O operador aperta o botão e a TV chama o paciente na mesma fração de segundo.</p>
-                    </div>
-                </div>
-                <a href="https://wa.me/5517996181897?text=Quero%20saber%20mais%20sobre%20o%20NextInLine%20com%20aparelho%20gr%C3%A1tis!" target="_blank" class="cta-btn">QUERO GARANTIR MEU APARELHO AGORA</a>
-            </div>
+            
+            <p class="m-text">Nós não entregamos um link para você se virar. Nós entregamos o <strong>equipamento oficial PrimeLogic</strong> direto na sua mão. O aparelho do sistema é blindado, focado apenas em gerenciar as suas chamadas. Zero distrações, zero falhas.</p>
+            <p class="m-text">Bote nossa infraestrutura à prova. O equipamento é nosso presente para a sua operação, e você tem <strong>3 meses de serviço 100% gratuitos</strong>. É ligar na tomada e ver o fluxo da sua clínica ou prefeitura mudar de nível na hora.</p>
+            
+            <a href="https://wa.me/5517996181897?text=Fala%20Diretoria!%20Quero%20garantir%20o%20aparelho%20gr%C3%A1tis%20do%20NextInLine." target="_blank" class="m-btn">GARANTIR MEU APARELHO AGORA</a>
         </div>
     </div>
 
@@ -280,30 +268,17 @@
     <div class="modal-overlay" id="modal-primemenu">
         <div class="modal-content">
             <button class="close-modal" onclick="closeModals()">×</button>
-            <div class="modal-header">
-                <i class="fa-solid fa-mobile-button" style="font-size: 4rem; color: var(--accent-cyan);"></i>
-                <div>
-                    <h2>PrimeMenu</h2>
-                    <span style="color: var(--text-p); font-size: 1.2rem; text-transform: uppercase; letter-spacing: 2px;">Delivery Independente</span>
-                </div>
+            <h2 class="m-title">PrimeMenu</h2>
+            <div class="m-tag">Delivery Independente</div>
+            
+            <div class="m-offer">
+                1 MÊS TOTALMENTE GRÁTIS PARA VOCÊ TESTAR O MOTOR!
             </div>
-            <div class="modal-body">
-                <div class="offer-tag">1 MÊS TOTALMENTE GRÁTIS PARA VOCÊ TESTAR!</div>
-                <p>Chega de dividir o seu lucro suado com aplicativos que cobram 27% de taxa. O PrimeMenu é a sua alforria. Você ganha uma plataforma com a sua identidade visual, onde o cliente pede e o dinheiro vai 100% para o seu caixa.</p>
-                <p>Bote o nosso sistema à prova na sua lanchonete ou restaurante. Aproveite <strong>1 mês grátis</strong> para ver a mágica do robô avisando seus clientes no WhatsApp enquanto sua equipe foca apenas em fazer a comida sair rápida.</p>
-                
-                <div class="modal-features">
-                    <div class="m-feature">
-                        <h4>Painel de Caixa (PDV)</h4>
-                        <p>Avisa com alarme sonoro na tela do seu computador sempre que um pedido novo entra.</p>
-                    </div>
-                    <div class="m-feature">
-                        <h4>Robô de WhatsApp</h4>
-                        <p>Notifica o cliente automaticamente quando o lanche vai pra chapa e quando sai pra entrega.</p>
-                    </div>
-                </div>
-                <a href="https://wa.me/5517996181897?text=Quero%20meu%201%20m%C3%AAs%20gr%C3%A1tis%20do%20PrimeMenu!" target="_blank" class="cta-btn">ATIVAR MEU MÊS GRÁTIS</a>
-            </div>
+            
+            <p class="m-text">Retome o controle da sua cozinha. O PrimeMenu é a plataforma definitiva de White-Label. Seu cliente faz o pedido em um site liso, com a sua marca, e a sua equipe recebe tudo organizado na tela do computador com alerta sonoro.</p>
+            <p class="m-text">Enquanto você foca na chapa, o nosso Robô notifica o cliente direto no WhatsApp. Teste agora com <strong>1 mês de serviço grátis</strong> e veja o quanto do seu lucro estava sendo jogado fora em taxas absurdas.</p>
+            
+            <a href="https://wa.me/5517996181897?text=Fala%20Diretoria!%20Quero%20testar%20o%20PrimeMenu%20de%20gra%C3%A7a." target="_blank" class="m-btn">ATIVAR MEU MÊS GRÁTIS</a>
         </div>
     </div>
 
@@ -311,57 +286,101 @@
     <!-- ================= SCRIPTS ================= -->
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script>
-        // 1. Efeito Espacial 3D nos Cards (Tilt Effect Vanilla JS)
-        const tiltCards = document.querySelectorAll('.tilt-card');
-        tiltCards.forEach(card => {
-            card.addEventListener('mousemove', e => {
-                const rect = card.getBoundingClientRect();
-                const x = e.clientX - rect.left;
-                const y = e.clientY - rect.top;
-                const centerX = rect.width / 2;
-                const centerY = rect.height / 2;
-                
-                const rotateX = ((y - centerY) / centerY) * -15; // Inversão para o tilt parecer natural
-                const rotateY = ((x - centerX) / centerX) * 15;
-                
-                card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.02, 1.02, 1.02)`;
-            });
+        // 1. FUNDO VIVO, CHEIO DE ENERGIA E DINAMISMO (CANVAS)
+        const canvas = document.getElementById('live-background');
+        const ctx = canvas.getContext('2d');
+        let width, height;
+        let particles = [];
+        
+        // Cores da PrimeLogic para as partículas
+        const colors = ['rgba(37, 99, 235, 0.4)', 'rgba(0, 240, 255, 0.4)', 'rgba(15, 23, 42, 0.1)'];
+
+        function initCanvas() {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+            particles = [];
+            // Quantidade de bolhas de vida
+            const particleCount = window.innerWidth < 768 ? 30 : 60; 
             
-            card.addEventListener('mouseleave', () => {
-                card.style.transform = `perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)`;
-            });
-        });
-
-        // 2. Controle dos Modais Dimensionais
-        function openModal(id) {
-            document.getElementById('modal-' + id).classList.add('active');
-            document.body.style.overflow = 'hidden'; // Trava o scroll do fundo
-        }
-
-        function closeModals() {
-            document.querySelectorAll('.modal-overlay').forEach(modal => {
-                modal.classList.remove('active');
-            });
-            document.body.style.overflow = 'auto'; // Destrava o scroll
-        }
-
-        // Fechar modal clicando fora da caixa
-        window.onclick = function(event) {
-            if (event.target.classList.contains('modal-overlay')) {
-                closeModals();
+            for(let i = 0; i < particleCount; i++) {
+                particles.push({
+                    x: Math.random() * width,
+                    y: Math.random() * height,
+                    radius: Math.random() * 80 + 20, // Bolhas maiores e menores
+                    vx: (Math.random() - 0.5) * 1.5, // Velocidade
+                    vy: (Math.random() - 0.5) * 1.5,
+                    color: colors[Math.floor(Math.random() * colors.length)]
+                });
             }
         }
 
-        // 3. Mapa Imersivo Clean
+        // Interação com o mouse (A energia foge do ponteiro)
+        let mouse = { x: -1000, y: -1000 };
+        window.addEventListener('mousemove', (e) => { mouse.x = e.clientX; mouse.y = e.clientY; });
+        window.addEventListener('mouseout', () => { mouse.x = -1000; mouse.y = -1000; });
+
+        function animateCanvas() {
+            ctx.clearRect(0, 0, width, height);
+            
+            particles.forEach(p => {
+                // Movimento orgânico
+                p.x += p.vx;
+                p.y += p.vy;
+
+                // Rebater nas paredes de forma suave
+                if(p.x < -100) p.x = width + 100;
+                if(p.x > width + 100) p.x = -100;
+                if(p.y < -100) p.y = height + 100;
+                if(p.y > height + 100) p.y = -100;
+
+                // Repulsão do mouse (O site reage a você!)
+                let dx = mouse.x - p.x;
+                let dy = mouse.y - p.y;
+                let distance = Math.sqrt(dx * dx + dy * dy);
+                if (distance < 200) {
+                    p.x -= dx * 0.03;
+                    p.y -= dy * 0.03;
+                }
+
+                // Desenhar as células de energia
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+                ctx.fillStyle = p.color;
+                ctx.fill();
+            });
+            
+            requestAnimationFrame(animateCanvas);
+        }
+
+        window.addEventListener('resize', initCanvas);
+        initCanvas();
+        animateCanvas();
+
+
+        // 2. CONTROLE DOS MODAIS
+        function openModal(id) {
+            document.getElementById('modal-' + id).classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+        function closeModals() {
+            document.querySelectorAll('.modal-overlay').forEach(modal => modal.classList.remove('active'));
+            document.body.style.overflow = 'auto';
+        }
+        window.onclick = function(e) {
+            if (e.target.classList.contains('modal-overlay')) closeModals();
+        }
+
+
+        // 3. MAPA BRUTALISTA (LEAFLET)
         var map = L.map('map', { scrollWheelZoom: false }).setView([-20.08, -50.45], 10);
-        L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
-            attribution: '&copy; PrimeLogic', maxZoom: 19
+        L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+            attribution: '&copy; PrimeLogic Tracker'
         }).addTo(map);
 
-        var cleanIcon = L.divIcon({
+        var rockIcon = L.divIcon({
             className: 'custom-div-icon',
-            html: "<div style='background: linear-gradient(135deg, #2563eb, #06b6d4); width:20px; height:20px; border-radius:50%; box-shadow: 0 5px 15px rgba(37,99,235,0.6); border: 3px solid white;'></div>",
-            iconSize: [20, 20], iconAnchor: [10, 10]
+            html: "<div style='background-color: #0f172a; width:25px; height:25px; transform: rotate(45deg); border: 3px solid #00f0ff; box-shadow: 5px 5px 0px rgba(0,0,0,0.2);'></div>",
+            iconSize: [25, 25], iconAnchor: [12, 12]
         });
 
         const cities = [
@@ -375,8 +394,8 @@
         ];
 
         cities.forEach(city => {
-            L.marker(city.coords, {icon: cleanIcon}).addTo(map)
-             .bindPopup(`<strong style="color:#1A365D; font-size:16px;">${city.name}</strong><br>Domínio PrimeLogic`);
+            L.marker(city.coords, {icon: rockIcon}).addTo(map)
+             .bindPopup(`<strong style="font-family:'Space Grotesk'; font-size:18px; text-transform:uppercase;">${city.name}</strong><br>Domínio PrimeLogic`);
         });
     </script>
 </body>
