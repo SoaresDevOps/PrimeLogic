@@ -1,161 +1,270 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PrimeLogic | Software House</title>
-    <!-- Fontes Premium -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Space+Grotesk:wght@700;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-    <link rel="stylesheet" href="style.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PrimeLogic — O impossível é só questão de opinião.</title>
+<meta name="description" content="PrimeLogic é uma fábrica de software de alta performance. Engenharia bruta, sistemas blindados, resultado absoluto.">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-    <!-- Fundo Gradiente Animado (Estilo NextInLine) -->
-    <div class="animated-bg"></div>
+<!-- SIGNATURE ELEMENT: system status bar -->
+<div class="hud" id="hud">
+  <div class="hud__group">
+    <span class="hud__dot" aria-hidden="true"></span>
+    <span>STATUS DO SISTEMA: <strong>OPERACIONAL</strong></span>
+  </div>
+  <div class="hud__group hud__group--center">
+    <span id="hud-clock">00:00:00</span>
+    <span class="hud__sep">/</span>
+    <span>NOROESTE PAULISTA — LAT -20.40 LON -50.53</span>
+  </div>
+  <div class="hud__group">
+    <span>UPTIME <span id="hud-uptime">99.98%</span></span>
+  </div>
+</div>
 
-    <nav id="navbar">
-        <div class="logo-container">
-            <img src="Logo.png" alt="PrimeLogic Logo">
+<!-- AMBIENT MESH BACKGROUND -->
+<div class="mesh" aria-hidden="true">
+  <span class="mesh__blob mesh__blob--1"></span>
+  <span class="mesh__blob mesh__blob--2"></span>
+  <span class="mesh__blob mesh__blob--3"></span>
+  <span class="mesh__grid"></span>
+</div>
+
+<header class="site-header">
+  <a href="#top" class="logo">
+    <span class="logo__mark">PL</span>
+    <span class="logo__word">PRIME<b>LOGIC</b></span>
+  </a>
+
+  <nav class="nav" id="nav">
+    <a href="#fabrica">Fábrica</a>
+    <a href="#ecossistema">Ecossistema</a>
+    <a href="#cobertura">Cobertura</a>
+    <a href="#contato">Contato</a>
+  </nav>
+
+  <a href="https://wa.me/5517996181897" target="_blank" rel="noopener" class="btn btn--ghost btn--small">
+    Falar com engenharia
+  </a>
+
+  <button class="nav-toggle" id="navToggle" aria-label="Abrir menu" aria-expanded="false">
+    <span></span><span></span><span></span>
+  </button>
+</header>
+
+<main id="top">
+
+  <!-- HERO -->
+  <section class="hero">
+    <p class="eyebrow">SOFTWARE HOUSE · ENGENHARIA DE ALTA PERFORMANCE</p>
+    <h1 class="hero__title">
+      O IMPOSSÍVEL É SÓ<br>
+      <span class="hero__title--outline">QUESTÃO DE OPINIÃO.</span>
+    </h1>
+    <p class="hero__subtitle">
+      Engenharia de software bruta para quem busca performance absoluta.
+    </p>
+    <div class="hero__actions">
+      <a href="#ecossistema" class="btn btn--primary">Ver ecossistema</a>
+      <a href="#fabrica" class="btn btn--outline">Como operamos</a>
+    </div>
+
+    <div class="hero__specs">
+      <div class="spec">
+        <span class="spec__value">0</span>
+        <span class="spec__label">concessões na entrega</span>
+      </div>
+      <div class="spec">
+        <span class="spec__value">24/7</span>
+        <span class="spec__label">monitoramento ativo</span>
+      </div>
+      <div class="spec">
+        <span class="spec__value">100%</span>
+        <span class="spec__label">código sob seu controle</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- FÁBRICA DE SOFTWARE -->
+  <section class="fabrica" id="fabrica">
+    <div class="section-head">
+      <p class="eyebrow">01 — MÉTODO</p>
+      <h2>Fábrica de Software</h2>
+      <p class="section-lede">
+        Não entregamos código por encomenda. Entramos dentro da operação do cliente,
+        diagnosticamos onde o sistema sangra performance e reconstruímos a partir do problema real —
+        não da suposição.
+      </p>
+    </div>
+
+    <div class="process">
+      <div class="process__item">
+        <span class="process__index">01</span>
+        <h3>Imersão diagnóstica</h3>
+        <p>Auditamos processos, dados e gargalos operacionais in loco. Nenhuma linha é escrita antes de entendermos exatamente onde o dinheiro está sendo perdido.</p>
+      </div>
+      <div class="process__item">
+        <span class="process__index">02</span>
+        <h3>Arquitetura de guerra</h3>
+        <p>Desenhamos sistemas para o pior cenário: pico de demanda, falha de rede, uso hostil. Se aguenta o caos, aguenta o dia a dia.</p>
+      </div>
+      <div class="process__item">
+        <span class="process__index">03</span>
+        <h3>Execução blindada</h3>
+        <p>Sprints curtos, entregas verificáveis, sem caixa-preta. Você acompanha o sistema nascendo, não recebe um relatório no final.</p>
+      </div>
+      <div class="process__item">
+        <span class="process__index">04</span>
+        <h3>Operação contínua</h3>
+        <p>Pós-entrega é monitorado como infraestrutura crítica. Métricas em tempo real, não promessas de suporte.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ECOSSISTEMA -->
+  <section class="ecossistema" id="ecossistema">
+    <div class="section-head">
+      <p class="eyebrow">02 — PRODUTOS</p>
+      <h2>Ecossistema PrimeLogic</h2>
+      <p class="section-lede">
+        Dois sistemas prontos para operar. Zero dependência de terceiros, zero limite de escala.
+      </p>
+    </div>
+
+    <div class="products">
+
+      <!-- NEXTINLINE -->
+      <article class="product-card tilt" tabindex="0">
+        <div class="product-card__inner">
+          <div class="product-card__top">
+            <span class="product-card__tag">GESTÃO DE FILA · TEMPO REAL</span>
+            <h3>NextInLine</h3>
+            <p class="product-card__desc">
+              Controle de fila com aparelho oficial blindado e comunicação instantânea via WebSockets.
+              O cliente vê sua posição mudar ao vivo — sem atualizar a página, sem adivinhar.
+            </p>
+          </div>
+
+          <ul class="product-card__features">
+            <li><span>Aparelho Oficial Blindado</span> — hardware dedicado em modo quiosque, travado contra uso indevido.</li>
+            <li><span>WebSockets nativo</span> — fila atualizada em tempo real em todos os pontos simultaneamente.</li>
+            <li><span>Painel de comando central</span> — visão completa da operação em um único lugar.</li>
+          </ul>
+
+          <div class="product-card__offer">
+            <span class="offer__label">OFERTA DE ENTRADA</span>
+            <span class="offer__text">Aparelho PrimeLogic Grátis + 3 meses de serviço isentos</span>
+          </div>
+
+          <a href="https://wa.me/5517996181897?text=Quero%20conhecer%20o%20NextInLine" target="_blank" rel="noopener" class="btn btn--primary btn--block">Quero o NextInLine</a>
         </div>
-        <div class="nav-links">
-            <a href="#sob-medida">Engenharia Sob Medida</a>
-            <a href="#nextinline">NextInLine</a>
-            <a href="#primemenu">PrimeMenu</a>
-            <a href="https://wa.me/5517996181897" target="_blank" class="nav-btn">Falar com Consultor</a>
+      </article>
+
+      <!-- PRIMEMENU -->
+      <article class="product-card tilt" tabindex="0">
+        <div class="product-card__inner">
+          <div class="product-card__top">
+            <span class="product-card__tag">PDV · WHITE-LABEL</span>
+            <h3>PrimeMenu</h3>
+            <p class="product-card__desc">
+              Cardápio digital e automação de PDV com sua marca — nunca a nossa.
+              Independência total de identidade visual, do domínio ao app.
+            </p>
+          </div>
+
+          <ul class="product-card__features">
+            <li><span>White-Label Independence</span> — sua marca do início ao fim, sem rastro de terceiros.</li>
+            <li><span>Automação de PDV</span> — pedidos, caixa e cozinha sincronizados sem intervenção manual.</li>
+            <li><span>Implantação em 48h</span> — operação validada antes de qualquer compromisso de longo prazo.</li>
+          </ul>
+
+          <div class="product-card__offer">
+            <span class="offer__label">OFERTA DE ENTRADA</span>
+            <span class="offer__text">1 mês de serviço totalmente gratuito para validar a tecnologia</span>
+          </div>
+
+          <a href="https://wa.me/5517996181897?text=Quero%20conhecer%20o%20PrimeMenu" target="_blank" rel="noopener" class="btn btn--primary btn--block">Quero o PrimeMenu</a>
         </div>
-    </nav>
+      </article>
 
-    <!-- HERO SECTION -->
-    <section class="hero">
-        <div class="hero-content reveal">
-            <h1>O IMPOSSÍVEL É SÓ<br><span>QUESTÃO DE OPINIÃO.</span></h1>
-            <p>Construímos tecnologia corporativa de alto desempenho para clínicas, prefeituras e comércio. Sistemas implacáveis, desenhados para não falhar.</p>
-            <a href="#nextinline" class="cta-primary">Conhecer o Ecossistema</a>
-        </div>
-    </section>
+    </div>
+  </section>
 
-    <!-- FÁBRICA DE SOFTWARE -->
-    <section id="sob-medida" class="section-padding custom-dev">
-        <div class="container reveal">
-            <div class="section-title text-center">
-                <h2>Fábrica de Software</h2>
-                <p>Nós não adaptamos a sua empresa a um sistema. Nós construímos o sistema em volta da sua operação.</p>
-            </div>
-            <div class="grid-3">
-                <div class="card">
-                    <i class="fa-solid fa-code"></i>
-                    <h3>Imersão Total</h3>
-                    <p>Mapeamos cada gargalo da sua empresa. Entregamos código bruto focado em resolver a sua dor real, sem remendos.</p>
-                </div>
-                <div class="card">
-                    <i class="fa-solid fa-server"></i>
-                    <h3>Arquitetura Limpa</h3>
-                    <p>Infraestrutura escalável. Bancos de dados robustos e servidores que aguentam o impacto do seu crescimento.</p>
-                </div>
-                <div class="card">
-                    <i class="fa-solid fa-shield-halved"></i>
-                    <h3>Blindagem e Suporte</h3>
-                    <p>Não te abandonamos no palco. Treinamos sua equipe e garantimos que a operação rode lisa 24 horas por dia.</p>
-                </div>
-            </div>
-        </div>
-    </section>
+  <!-- COBERTURA REGIONAL -->
+  <section class="cobertura" id="cobertura">
+    <div class="section-head">
+      <p class="eyebrow">03 — COBERTURA</p>
+      <h2>Cobertura Regional</h2>
+      <p class="section-lede">
+        Operação ativa no Noroeste Paulista, com capacidade de implantação em toda a região.
+      </p>
+    </div>
 
-    <!-- NEXTINLINE - SEÇÃO DETALHADA -->
-    <section id="nextinline" class="section-padding product-detail bg-glass">
-        <div class="container grid-2 align-center reveal">
-            <div class="product-info">
-                <span class="badge">Saúde & Gestão Pública</span>
-                <h2>NextInLine</h2>
-                <h3>Controle absoluto de filas em milissegundos.</h3>
-                <p>O fim do caos na sua recepção. O NextInLine é uma plataforma corporativa desenhada para ambientes onde a falha não é uma opção. Esqueça sistemas de senha que travam a smart TV.</p>
-                
-                <ul class="benefit-list">
-                    <li><i class="fa-solid fa-check"></i> <strong>Aparelho Oficial Gratuito:</strong> Nós enviamos o hardware da PrimeLogic sem custo. Ele chega blindado (Kiosk Mode), travado exclusivamente no nosso sistema.</li>
-                    <li><i class="fa-solid fa-check"></i> <strong>Tecnologia WebSockets:</strong> O atendente clica no painel e a TV chama o paciente na mesma fração de segundo. Sem delays.</li>
-                    <li><i class="fa-solid fa-check"></i> <strong>Implementação Imediata:</strong> É plugar na tomada, conectar no HDMI e começar a chamar.</li>
-                </ul>
+    <div class="cobertura__grid">
+      <div id="map" class="map" role="img" aria-label="Mapa de cobertura da PrimeLogic no Noroeste Paulista"></div>
+      <div class="cobertura__list">
+        <p class="cobertura__list-title">CIDADES ATENDIDAS</p>
+        <ul>
+          <li>São José do Rio Preto</li>
+          <li>Populina</li>
+          <li>Jales</li>
+          <li>Fernandópolis</li>
+          <li>Votuporanga</li>
+          <li>Mirassol</li>
+          <li>General Salgado</li>
+          <li>Nova Canaã Paulista</li>
+        </ul>
+        <p class="cobertura__note">Região fora do mapa? A infraestrutura é remota — atendemos todo o estado de São Paulo mediante avaliação técnica.</p>
+      </div>
+    </div>
+  </section>
 
-                <div class="offer-box">
-                    <strong>Vantagem de Implantação:</strong> Leve o equipamento PrimeLogic de graça e ganhe <strong>3 meses de licença 100% isentos</strong>.
-                </div>
-                
-                <a href="https://wa.me/5517996181897?text=Quero%20saber%20sobre%20o%20NextInLine%20com%20aparelho%20grátis" target="_blank" class="cta-primary">Solicitar Aparelho</a>
-            </div>
-            <div class="product-visual">
-                <!-- Espaço para você colocar uma imagem do painel ou da TV Box no futuro -->
-                <div class="mockup-placeholder">
-                    <i class="fa-solid fa-users-viewfinder"></i>
-                    <p>Sistema Operacional NextInLine</p>
-                </div>
-            </div>
-        </div>
-    </section>
+  <!-- CTA FINAL -->
+  <section class="cta-final">
+    <h2>Chega de operar no limite do improviso.</h2>
+    <p>Fale diretamente com a engenharia. Sem formulário, sem fila de atendimento.</p>
+    <a href="https://wa.me/5517996181897" target="_blank" rel="noopener" class="btn btn--primary btn--large">Iniciar conversa no WhatsApp</a>
+  </section>
 
-    <!-- PRIMEMENU - SEÇÃO DETALHADA -->
-    <section id="primemenu" class="section-padding product-detail">
-        <div class="container grid-2 align-center reveal reverse-grid">
-            <div class="product-visual">
-                <div class="mockup-placeholder accent-mockup">
-                    <i class="fa-solid fa-mobile-screen"></i>
-                    <p>Cardápio Digital PrimeMenu</p>
-                </div>
-            </div>
-            <div class="product-info">
-                <span class="badge badge-accent">Foodtech & Delivery</span>
-                <h2>PrimeMenu</h2>
-                <h3>A sua marca. As suas regras. O seu lucro.</h3>
-                <p>Nós construímos a sua alforria digital. Pare de deixar até 27% do seu faturamento nas mãos de aplicativos de terceiros. O PrimeMenu é o seu sistema próprio de vendas.</p>
-                
-                <ul class="benefit-list">
-                    <li><i class="fa-solid fa-check"></i> <strong>White-Label Profissional:</strong> Um site rápido e limpo com a sua logo e as suas cores. O cliente não precisa baixar nada.</li>
-                    <li><i class="fa-solid fa-check"></i> <strong>Painel PDV Exclusivo:</strong> O pedido cai direto na tela do seu computador com um alerta sonoro. Gestão visual e rápida para a cozinha não parar.</li>
-                    <li><i class="fa-solid fa-check"></i> <strong>Automação de WhatsApp:</strong> O nosso robô avisa seu cliente no exato momento em que o lanche vai pra chapa e quando sai para entrega.</li>
-                </ul>
+</main>
 
-                <div class="offer-box accent-box">
-                    <strong>Teste Operacional:</strong> Valide a tecnologia na sua cozinha com <strong>1 mês de serviço totalmente gratuito</strong>.
-                </div>
-                
-                <a href="https://wa.me/5517996181897?text=Quero%20meu%20mês%20grátis%20no%20PrimeMenu" target="_blank" class="cta-primary">Ativar Mês Grátis</a>
-            </div>
-        </div>
-    </section>
+<footer class="site-footer" id="contato">
+  <div class="footer__top">
+    <div class="footer__brand">
+      <span class="logo__mark">PL</span>
+      <span class="logo__word">PRIME<b>LOGIC</b></span>
+      <p>Engenharia de software para operações que não podem falhar.</p>
+    </div>
 
-    <!-- MAPA -->
-    <section id="cobertura" class="section-padding bg-glass">
-        <div class="container reveal">
-            <div class="section-title text-center">
-                <h2>Cobertura Regional</h2>
-                <p>Nossos sistemas operando com excelência em prefeituras e empresas do Noroeste Paulista.</p>
-            </div>
-            <div id="map"></div>
-        </div>
-    </section>
+    <div class="footer__contact">
+      <a href="https://wa.me/5517996181897" target="_blank" rel="noopener" class="contact-btn contact-btn--whatsapp">
+        <span class="contact-btn__label">WHATSAPP</span>
+        <span class="contact-btn__value">17 99618-1897</span>
+      </a>
+      <a href="https://instagram.com/primelogicoficial" target="_blank" rel="noopener" class="contact-btn contact-btn--instagram">
+        <span class="contact-btn__label">INSTAGRAM</span>
+        <span class="contact-btn__value">@primelogicoficial</span>
+      </a>
+    </div>
+  </div>
 
-    <!-- FOOTER -->
-    <footer>
-        <div class="container text-center reveal">
-            <h2>Eleve o padrão da sua operação.</h2>
-            <p>Fale diretamente com a nossa diretoria e agende uma consultoria sem compromisso.</p>
-            
-            <div class="footer-links">
-                <a href="https://wa.me/5517996181897" target="_blank" class="footer-btn">
-                    <i class="fa-brands fa-whatsapp"></i> (17) 99618-1897
-                </a>
-                <a href="https://instagram.com/primelogicoficial" target="_blank" class="footer-btn outline">
-                    <i class="fa-brands fa-instagram"></i> @primelogicoficial
-                </a>
-            </div>
-            <img src="Logo.png" alt="PrimeLogic" class="footer-logo">
-            <p class="copyright">&copy; 2026 PrimeLogic Software House. A excelência exige atitude.</p>
-        </div>
-    </footer>
+  <div class="footer__bottom">
+    <span>© 2026 PRIMELOGIC. TODOS OS DIREITOS RESERVADOS.</span>
+    <span>NOROESTE PAULISTA, BRASIL</span>
+  </div>
+</footer>
 
-    <!-- Scripts -->
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-    <script src="main.js"></script>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="app.js"></script>
 </body>
 </html>
