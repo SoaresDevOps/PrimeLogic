@@ -3,536 +3,259 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PrimeLogic | O Futuro é Agora</title>
+    <title>PrimeLogic | O Futuro em Movimento</title>
     <!-- Fontes Premium -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;900&family=Space+Grotesk:wght@700;900&display=swap" rel="stylesheet">
     <!-- Ícones -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Leaflet CSS (Para o Mapa) -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     
     <style>
         :root {
             --bg-dark: #030305;
-            --bg-card: #0a0b10;
             --primary-blue: #1A365D;
             --neon-blue: #00f0ff;
-            --neon-purple: #8a2be2;
             --text-main: #ffffff;
             --text-muted: #8892b0;
             --glass-bg: rgba(10, 11, 16, 0.75);
             --glass-border: rgba(255, 255, 255, 0.05);
         }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Inter', sans-serif;
-            scroll-behavior: smooth;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; scroll-behavior: smooth; }
+        body { background-color: var(--bg-dark); color: var(--text-main); overflow-x: hidden; }
 
-        body {
-            background-color: var(--bg-dark);
-            color: var(--text-main);
-            overflow-x: hidden;
-            background-image: 
-                radial-gradient(circle at 15% 50%, rgba(26, 54, 93, 0.15), transparent 25%),
-                radial-gradient(circle at 85% 30%, rgba(0, 240, 255, 0.08), transparent 25%);
-        }
-
-        /* --- NAVEGAÇÃO --- */
-        nav {
+        /* Fundo Animado (Canvas) */
+        #particles-canvas {
             position: fixed;
-            top: 0;
-            width: 100%;
-            padding: 20px 5%;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: var(--glass-bg);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border-bottom: 1px solid var(--glass-border);
-            z-index: 9999;
-        }
-
-        .logo-container img {
-            height: 45px;
-            filter: drop-shadow(0 0 10px rgba(0, 240, 255, 0.3));
-            transition: 0.4s ease;
-        }
-        
-        .logo-container img:hover {
-            filter: drop-shadow(0 0 25px var(--neon-blue)) scale(1.05);
-        }
-
-        .nav-links a {
-            color: var(--text-main);
-            text-decoration: none;
-            font-weight: 900;
-            margin-left: 40px;
-            font-size: 0.85rem;
-            text-transform: uppercase;
-            letter-spacing: 3px;
-            transition: 0.3s;
-            position: relative;
-        }
-
-        .nav-links a::after {
-            content: '';
-            position: absolute;
-            width: 0; height: 2px;
-            bottom: -5px; left: 0;
-            background-color: var(--neon-blue);
-            transition: width 0.3s ease;
-        }
-
-        .nav-links a:hover::after {
-            width: 100%;
-        }
-
-        /* --- HERO SECTION (O GRITO INICIAL) --- */
-        .hero {
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-            padding: 0 20px;
-            position: relative;
-        }
-
-        .hero::before {
-            content: '';
-            position: absolute;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: url('https://www.transparenttextures.com/patterns/stardust.png');
-            opacity: 0.3;
+            top: 0; left: 0; width: 100%; height: 100%;
             z-index: -1;
-            animation: pulseBg 10s infinite alternate;
+            pointer-events: none;
         }
 
-        @keyframes pulseBg {
-            0% { opacity: 0.1; }
-            100% { opacity: 0.4; }
+        /* Nav */
+        nav {
+            position: fixed; top: 0; width: 100%; padding: 20px 5%; display: flex; justify-content: space-between; align-items: center;
+            background: var(--glass-bg); backdrop-filter: blur(20px); border-bottom: 1px solid var(--glass-border); z-index: 9999;
         }
+        .logo-container img { height: 45px; filter: drop-shadow(0 0 15px rgba(0, 240, 255, 0.4)); transition: 0.4s ease; }
+        .nav-links a { color: var(--text-main); text-decoration: none; font-weight: 900; margin-left: 40px; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 3px; transition: 0.3s; position: relative; }
+        .nav-links a:hover { color: var(--neon-blue); }
 
-        .hero-badge {
-            padding: 10px 20px;
-            background: rgba(0, 240, 255, 0.05);
-            border: 1px solid rgba(0, 240, 255, 0.2);
-            color: var(--neon-blue);
-            border-radius: 50px;
-            font-weight: 600;
-            letter-spacing: 2px;
-            margin-bottom: 30px;
-            text-transform: uppercase;
-            font-size: 0.8rem;
-        }
+        /* Hero */
+        .hero { min-height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 0 20px; }
+        .hero h1 { font-family: 'Space Grotesk', sans-serif; font-size: clamp(3.5rem, 10vw, 7rem); font-weight: 900; line-height: 0.9; margin-bottom: 25px; text-shadow: 0 20px 40px rgba(0,0,0,0.8); letter-spacing: -2px; }
+        .hero h1 span { background: linear-gradient(90deg, var(--neon-blue), #0088ff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; filter: drop-shadow(0 0 30px rgba(0, 240, 255, 0.5)); }
+        .glow-button { padding: 20px 50px; font-size: 1.2rem; font-weight: 900; color: var(--bg-dark); background: var(--neon-blue); border: none; border-radius: 50px; cursor: pointer; text-transform: uppercase; letter-spacing: 2px; box-shadow: 0 0 30px rgba(0, 240, 255, 0.4); transition: 0.4s; text-decoration: none; display: inline-block; }
+        .glow-button:hover { box-shadow: 0 0 60px rgba(0, 240, 255, 0.8); transform: translateY(-5px); }
 
-        .hero h1 {
-            font-family: 'Space Grotesk', sans-serif;
-            font-size: clamp(3.5rem, 10vw, 7rem);
-            font-weight: 900;
-            line-height: 0.9;
-            margin-bottom: 25px;
-            background: linear-gradient(180deg, #ffffff 0%, #a0abc0 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            text-shadow: 0 20px 40px rgba(0,0,0,0.5);
-            letter-spacing: -2px;
-        }
+        /* Mapa Section */
+        .map-section { padding: 100px 5%; text-align: center; background: rgba(3, 3, 5, 0.8); backdrop-filter: blur(10px); border-top: 1px solid var(--glass-border); }
+        .map-section h2 { font-family: 'Space Grotesk', sans-serif; font-size: 3.5rem; margin-bottom: 20px; }
+        .map-container { max-width: 1200px; height: 500px; margin: 40px auto; border-radius: 20px; overflow: hidden; border: 2px solid rgba(0, 240, 255, 0.2); box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8), 0 0 40px rgba(0, 240, 255, 0.1); position: relative; z-index: 10; }
+        #map { width: 100%; height: 100%; background: #0a0b10; }
 
-        .hero h1 span {
-            background: linear-gradient(90deg, var(--neon-blue), #0088ff);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            text-shadow: 0 0 60px rgba(0, 240, 255, 0.4);
-        }
+        /* Contatos Premium */
+        .contact-section { padding: 100px 20px; text-align: center; }
+        .contact-grid { display: flex; justify-content: center; gap: 40px; margin-top: 50px; flex-wrap: wrap; }
+        .contact-card { background: rgba(10, 11, 16, 0.8); padding: 40px; border-radius: 20px; border: 1px solid var(--glass-border); width: 300px; transition: 0.4s; text-decoration: none; color: var(--text-main); }
+        .contact-card:hover { transform: translateY(-10px); border-color: var(--neon-blue); box-shadow: 0 10px 30px rgba(0, 240, 255, 0.15); }
+        .contact-card i { font-size: 40px; color: var(--neon-blue); margin-bottom: 20px; }
+        .contact-card h3 { font-size: 1.5rem; margin-bottom: 10px; }
 
-        .hero p {
-            font-size: 1.4rem;
-            color: var(--text-muted);
-            max-width: 800px;
-            margin-bottom: 50px;
-            font-weight: 300;
-            line-height: 1.6;
-        }
-
-        .glow-button {
-            padding: 20px 50px;
-            font-size: 1.2rem;
-            font-weight: 900;
-            color: var(--bg-dark);
-            background: var(--neon-blue);
-            border: none;
-            border-radius: 50px;
-            cursor: pointer;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            box-shadow: 0 0 30px rgba(0, 240, 255, 0.4), inset 0 0 15px rgba(255,255,255,0.6);
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            text-decoration: none;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .glow-button:hover {
-            box-shadow: 0 0 60px rgba(0, 240, 255, 0.8), inset 0 0 20px rgba(255,255,255,0.9);
-            transform: translateY(-5px) scale(1.05);
-        }
-
-        /* --- SEÇÃO DE NÚMEROS (O PESO DA BANDA) --- */
-        .stats-section {
-            padding: 80px 5%;
-            background: linear-gradient(to bottom, var(--bg-dark), #080a12);
-            border-top: 1px solid var(--glass-border);
-            border-bottom: 1px solid var(--glass-border);
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 40px;
-            text-align: center;
-        }
-
-        .stat-box h3 {
-            font-family: 'Space Grotesk', sans-serif;
-            font-size: 4rem;
-            color: var(--text-main);
-            margin-bottom: 10px;
-            text-shadow: 0 0 20px rgba(255,255,255,0.2);
-        }
-
-        .stat-box p {
-            color: var(--neon-blue);
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            font-size: 0.9rem;
-        }
-
-        /* --- PRODUTOS --- */
-        .product-section {
-            padding: 150px 5%;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 60px;
-            min-height: 80vh;
-        }
-
-        .product-section.reverse {
-            flex-direction: row-reverse;
-            background: linear-gradient(to right, rgba(26,54,93,0.05), transparent);
-        }
-
-        .product-content {
-            flex: 1;
-            max-width: 650px;
-        }
-
-        .product-badge {
-            display: inline-block;
-            padding: 8px 20px;
-            background: rgba(26, 54, 93, 0.4);
-            border: 1px solid var(--primary-blue);
-            color: var(--neon-blue);
-            border-radius: 30px;
-            font-size: 0.8rem;
-            font-weight: 900;
-            letter-spacing: 3px;
-            margin-bottom: 25px;
-        }
-
-        .product-content h2 {
-            font-family: 'Space Grotesk', sans-serif;
-            font-size: 4.5rem;
-            line-height: 1;
-            margin-bottom: 25px;
-        }
-
-        .product-content p {
-            font-size: 1.25rem;
-            color: var(--text-muted);
-            line-height: 1.8;
-            margin-bottom: 50px;
-        }
-
-        .features-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 25px;
-        }
-
-        .feature-item {
-            background: rgba(10, 11, 16, 0.8);
-            padding: 30px;
-            border-radius: 20px;
-            border: 1px solid var(--glass-border);
-            transition: 0.4s ease;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .feature-item::before {
-            content: '';
-            position: absolute;
-            top: 0; left: 0;
-            width: 2px; height: 100%;
-            background: var(--neon-blue);
-            transform: scaleY(0);
-            transition: 0.4s ease;
-        }
-
-        .feature-item:hover::before {
-            transform: scaleY(1);
-        }
-
-        .feature-item:hover {
-            transform: translateY(-10px);
-            background: rgba(20, 22, 30, 0.9);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
-            border-color: rgba(0, 240, 255, 0.2);
-        }
-
-        .feature-item i {
-            font-size: 28px;
-            color: var(--neon-blue);
-            margin-bottom: 15px;
-        }
-
-        .product-visual {
-            flex: 1;
-            display: flex;
-            justify-content: center;
-        }
-
-        .mockup-box {
-            width: 100%;
-            max-width: 550px;
-            height: 450px;
-            background: linear-gradient(145deg, #0f111a, #050507);
-            border-radius: 40px;
-            border: 1px solid rgba(255,255,255,0.05);
-            box-shadow: 0 40px 80px rgba(0,0,0,0.9), inset 0 0 30px rgba(255,255,255,0.02);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 6rem;
-            position: relative;
-            overflow: hidden;
-        }
-
-        /* --- ONDE A BANDA TOCA (CIDADES) --- */
-        .cities-section {
-            padding: 100px 5%;
-            text-align: center;
-            background: var(--bg-dark);
-        }
-
-        .cities-section h2 {
-            font-family: 'Space Grotesk', sans-serif;
-            font-size: 3rem;
-            margin-bottom: 50px;
-        }
-
-        .cities-grid {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 20px;
-            max-width: 1000px;
-            margin: 0 auto;
-        }
-
-        .city-tag {
-            padding: 15px 30px;
-            background: rgba(255,255,255,0.03);
-            border: 1px solid rgba(255,255,255,0.1);
-            border-radius: 12px;
-            font-weight: 600;
-            color: var(--text-muted);
-            font-size: 1.1rem;
-            transition: 0.3s;
-            cursor: default;
-        }
-
-        .city-tag:hover {
-            color: var(--neon-blue);
-            border-color: var(--neon-blue);
-            background: rgba(0, 240, 255, 0.05);
-            transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(0, 240, 255, 0.1);
-        }
-
-        /* --- CTA FINAL --- */
-        .cta-section {
-            padding: 150px 20px;
-            text-align: center;
-            background: radial-gradient(circle at center, rgba(26,54,93,0.4) 0%, var(--bg-dark) 70%);
-        }
-
-        .cta-section h2 {
-            font-family: 'Space Grotesk', sans-serif;
-            font-size: 4rem;
-            margin-bottom: 30px;
-        }
-
-        /* --- ANIMAÇÕES --- */
-        .hidden-element {
-            opacity: 0;
-            transform: translateY(50px) scale(0.95);
-            transition: all 1s cubic-bezier(0.22, 1, 0.36, 1);
-        }
-
-        .show-element {
-            opacity: 1;
-            transform: translateY(0) scale(1);
-        }
-
-        .delay-1 { transition-delay: 0.15s; }
-        .delay-2 { transition-delay: 0.3s; }
-
-        @media (max-width: 968px) {
-            .product-section, .product-section.reverse {
-                flex-direction: column;
-                text-align: center;
-            }
-            .nav-links { display: none; }
-            .hero h1 { font-size: 3rem; }
-        }
+        @media (max-width: 968px) { .nav-links { display: none; } }
     </style>
 </head>
 <body>
+
+    <!-- O Fundo Animado de Partículas -->
+    <canvas id="particles-canvas"></canvas>
 
     <nav>
         <div class="logo-container">
             <img src="Logo.png" alt="PrimeLogic Logo">
         </div>
         <div class="nav-links">
-            <a href="#stats">Impacto</a>
-            <a href="#nextinline">NextInLine</a>
-            <a href="#primemenu">PrimeMenu</a>
-            <a href="#contato">Backstage</a>
+            <a href="#mapa">Área de Cobertura</a>
+            <a href="#contato">Falar com a Diretoria</a>
         </div>
     </nav>
 
-    <!-- HERO SECTION -->
-    <section class="hero hidden-element">
-        <div class="hero-badge">Software House Premium</div>
-        <h1>CÓDIGO DE ELITE.<br><span>RESULTADO ABSOLUTO.</span></h1>
-        <p>A PrimeLogic não faz sistemas de prateleira. Nós construímos o motor que blinda a sua operação contra falhas e escala o seu negócio para a liderança do mercado.</p>
-        <a href="#nextinline" class="glow-button">Iniciar Sistema</a>
+    <section class="hero">
+        <h1>SISTEMAS QUE<br><span>NUNCA DORMEM.</span></h1>
+        <p style="font-size: 1.4rem; color: var(--text-muted); max-width: 800px; margin: 20px auto 50px;">O limite é uma fronteira criada apenas pela mente. A PrimeLogic destrói gargalos com código bruto e tecnologia de elite.</p>
+        <a href="#mapa" class="glow-button">Ver Domínio no Mapa</a>
     </section>
 
-    <!-- STATUS SECTION -->
-    <section id="stats" class="stats-section">
-        <div class="stat-box hidden-element">
-            <h3>100%</h3>
-            <p>Uptime do Servidor</p>
-        </div>
-        <div class="stat-box hidden-element delay-1">
-            <h3>Zero</h3>
-            <p>Taxas de Terceiros</p>
-        </div>
-        <div class="stat-box hidden-element delay-2">
-            <h3>∞</h3>
-            <p>Potencial de Escala</p>
+    <!-- O MAPA INTERATIVO REAAAL -->
+    <section id="mapa" class="map-section">
+        <h2>DOMINANDO O MAPA.</h2>
+        <p style="font-size: 1.2rem; color: var(--text-muted);">A onda verde da PrimeLogic já tomou conta da região. Clique nos pinos.</p>
+        
+        <div class="map-container">
+            <div id="map"></div>
         </div>
     </section>
 
-    <!-- NEXTINLINE -->
-    <section id="nextinline" class="product-section">
-        <div class="product-content hidden-element">
-            <span class="product-badge">SAÚDE & GESTÃO</span>
-            <h2>NextInLine</h2>
-            <p>A solução corporativa que acabou com o caos nas prefeituras. Painéis dinâmicos, controle absoluto e hardware blindado. Feito para ambientes onde a falha não é uma opção.</p>
-            
-            <div class="features-grid">
-                <div class="feature-item hidden-element delay-1">
-                    <i class="fa-solid fa-microchip"></i>
-                    <h3>Hardware Kiosk</h3>
-                    <p style="font-size: 0.95rem; color: var(--text-muted); margin-top: 10px;">A TV Box liga e tranca no nosso sistema. Zero evasão.</p>
-                </div>
-                <div class="feature-item hidden-element delay-2">
-                    <i class="fa-solid fa-server"></i>
-                    <h3>WebSockets API</h3>
-                    <p style="font-size: 0.95rem; color: var(--text-muted); margin-top: 10px;">Resposta em milissegundos para as chamadas na tela.</p>
-                </div>
-            </div>
-        </div>
-        <div class="product-visual hidden-element">
-            <div class="mockup-box">
-                <i class="fa-solid fa-display" style="color: var(--primary-blue); text-shadow: 0 0 50px rgba(0, 240, 255, 0.4);"></i>
-            </div>
+    <!-- ÁREA DE CONTATO -->
+    <section id="contato" class="contact-section">
+        <h2 style="font-family: 'Space Grotesk'; font-size: 3.5rem;">CONECTE-SE.</h2>
+        <div class="contact-grid">
+            <a href="https://wa.me/5517996181897" target="_blank" class="contact-card">
+                <i class="fa-brands fa-whatsapp"></i>
+                <h3>WhatsApp</h3>
+                <p style="color: var(--text-muted);">(17) 99618-1897</p>
+                <p style="color: var(--neon-blue); margin-top: 15px; font-weight: bold; font-size: 0.9rem;">CHAMAR AGORA ➔</p>
+            </a>
+            <a href="https://instagram.com/primelogicoficial" target="_blank" class="contact-card">
+                <i class="fa-brands fa-instagram"></i>
+                <h3>Instagram</h3>
+                <p style="color: var(--text-muted);">@primelogicoficial</p>
+                <p style="color: var(--neon-blue); margin-top: 15px; font-weight: bold; font-size: 0.9rem;">SEGUIR LÁ ➔</p>
+            </a>
         </div>
     </section>
 
-    <!-- PRIMEMENU -->
-    <section id="primemenu" class="product-section reverse">
-        <div class="product-content hidden-element">
-            <span class="product-badge">FOODTECH & ESCALA</span>
-            <h2>PrimeMenu</h2>
-            <p>Sua marca, suas regras. Um cardápio digital próprio conectado a um PDV implacável. Sem comissões que sugam seu lucro. O pedido cai direto na sua tela e o cliente é notificado no WhatsApp.</p>
-            
-            <div class="features-grid">
-                <div class="feature-item hidden-element delay-1">
-                    <i class="fa-solid fa-robot"></i>
-                    <h3>Automação Zap</h3>
-                    <p style="font-size: 0.95rem; color: var(--text-muted); margin-top: 10px;">Cliente avisado na hora que a carne bate na chapa.</p>
-                </div>
-                <div class="feature-item hidden-element delay-2">
-                    <i class="fa-solid fa-chart-line"></i>
-                    <h3>Margem Total</h3>
-                    <p style="font-size: 0.95rem; color: var(--text-muted); margin-top: 10px;">Você retém 100% do valor do pedido. Independência real.</p>
-                </div>
-            </div>
-        </div>
-        <div class="product-visual hidden-element">
-            <div class="mockup-box" style="border-color: rgba(0, 240, 255, 0.1);">
-                <i class="fa-solid fa-mobile-screen-button" style="color: var(--neon-blue); text-shadow: 0 0 60px rgba(0, 240, 255, 0.5);"></i>
-            </div>
-        </div>
-    </section>
-
-    <!-- CIDADES (O MAPA DA TURNÊ) -->
-    <section class="cities-section">
-        <h2 class="hidden-element">DOMINANDO O MAPA.</h2>
-        <p class="hidden-element" style="color: var(--text-muted); margin-bottom: 40px; font-size: 1.2rem;">Onde os sistemas PrimeLogic já operam com excelência:</p>
-        <div class="cities-grid hidden-element delay-1">
-            <div class="city-tag">Turmalina</div>
-            <div class="city-tag">Dolcinópolis</div>
-            <div class="city-tag">Mira Estrela</div>
-            <div class="city-tag">Populina</div>
-            <div class="city-tag">Pedranópolis</div>
-            <div class="city-tag">Mesópolis</div>
-            <div class="city-tag" style="border-color: var(--neon-blue); color: var(--text-main);">Ouroeste (Expansão)</div>
-        </div>
-    </section>
-
-    <!-- CTA FINAL -->
-    <section id="contato" class="cta-section hidden-element">
-        <h2>PRONTO PARA O PRÓXIMO NÍVEL?</h2>
-        <p style="font-size: 1.3rem; color: var(--text-muted); margin-bottom: 40px;">Pare de perder tempo com soluções amadoras. Assuma o controle.</p>
-        <a href="#" class="glow-button" style="background: transparent; border: 2px solid var(--neon-blue); color: var(--neon-blue);">Fale com a Diretoria</a>
-    </section>
-
-    <footer style="text-align: center; padding: 40px 20px; background: #020203; border-top: 1px solid rgba(255,255,255,0.05);">
-        <img src="Logo.png" alt="Logo Footer" height="25" style="filter: grayscale(100%) opacity(0.3); margin-bottom: 15px;">
-        <p style="color: var(--text-muted); font-size: 0.9rem;">&copy; 2026 PrimeLogic Software House. Todos os direitos reservados.</p>
-    </footer>
-
-    <!-- SCROLL REVEAL SCRIPT -->
+    <!-- Scripts do Mapa Leaflet -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    
+    <!-- Script de Animação das Partículas e do Mapa -->
     <script>
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach((entry) => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('show-element');
-                }
-            });
-        }, { threshold: 0.15 });
+        // ==========================================
+        // 1. CONFIGURAÇÃO DO MAPA (LEAFLET)
+        // ==========================================
+        // Centralizado no Noroeste Paulista
+        var map = L.map('map').setView([-20.08, -50.45], 10);
 
-        const hiddenElements = document.querySelectorAll('.hidden-element');
-        hiddenElements.forEach((el) => observer.observe(el));
+        // Mapa Dark/Cyberpunk (CartoDB Dark Matter)
+        L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+            attribution: '&copy; PrimeLogic Tracker',
+            maxZoom: 19
+        }).addTo(map);
+
+        // Ícone personalizado pro pino do mapa
+        var primeIcon = L.divIcon({
+            className: 'custom-div-icon',
+            html: "<div style='background-color:#00f0ff; width:15px; height:15px; border-radius:50%; box-shadow: 0 0 15px #00f0ff, 0 0 30px #00f0ff; border: 2px solid white;'></div>",
+            iconSize: [15, 15],
+            iconAnchor: [7, 7]
+        });
+
+        // Cidades Dominadas
+        const cities = [
+            { name: "Turmalina", coords: [-20.266, -50.478], status: "Operação Total - NextInLine" },
+            { name: "Dolcinópolis", coords: [-20.121, -50.513], status: "Operação Total" },
+            { name: "Mira Estrela", coords: [-19.982, -50.146], status: "Operação Total" },
+            { name: "Populina", coords: [-19.932, -50.627], status: "Operação Total" },
+            { name: "Pedranópolis", coords: [-20.244, -50.011], status: "Operação Total" },
+            { name: "Mesópolis", coords: [-19.957, -50.871], status: "Operação Total" },
+            { name: "Ouroeste", coords: [-20.000, -50.375], status: "Nova Expansão 🔥" }
+        ];
+
+        // Plantando os alfinetes
+        cities.forEach(city => {
+            L.marker(city.coords, {icon: primeIcon})
+             .addTo(map)
+             .bindPopup(`<strong style="color:#1A365D; font-size:16px;">${city.name}</strong><br>${city.status}`);
+        });
+
+
+        // ==========================================
+        // 2. FUNDO ANIMADO (PARTÍCULAS NEURAIS)
+        // ==========================================
+        const canvas = document.getElementById('particles-canvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth; canvas.height = window.innerHeight;
+
+        let particlesArray = [];
+        let mouse = { x: null, y: null, radius: 150 };
+
+        window.addEventListener('mousemove', function(event) {
+            mouse.x = event.x; mouse.y = event.y;
+        });
+
+        window.addEventListener('mouseout', function() {
+            mouse.x = undefined; mouse.y = undefined;
+        });
+
+        class Particle {
+            constructor(x, y, directionX, directionY, size, color) {
+                this.x = x; this.y = y; this.directionX = directionX; this.directionY = directionY;
+                this.size = size; this.color = color;
+            }
+            draw() {
+                ctx.beginPath(); ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2, false);
+                ctx.fillStyle = '#00f0ff'; ctx.fill();
+            }
+            update() {
+                if (this.x > canvas.width || this.x < 0) this.directionX = -this.directionX;
+                if (this.y > canvas.height || this.y < 0) this.directionY = -this.directionY;
+                this.x += this.directionX; this.y += this.directionY;
+                this.draw();
+            }
+        }
+
+        function init() {
+            particlesArray = [];
+            let numberOfParticles = (canvas.height * canvas.width) / 12000;
+            for (let i = 0; i < numberOfParticles; i++) {
+                let size = (Math.random() * 2) + 1;
+                let x = (Math.random() * ((innerWidth - size * 2) - (size * 2)) + size * 2);
+                let y = (Math.random() * ((innerHeight - size * 2) - (size * 2)) + size * 2);
+                let directionX = (Math.random() * 2) - 1.5;
+                let directionY = (Math.random() * 2) - 1.5;
+                let color = '#00f0ff';
+                particlesArray.push(new Particle(x, y, directionX, directionY, size, color));
+            }
+        }
+
+        function connect() {
+            let opacityValue = 1;
+            for (let a = 0; a < particlesArray.length; a++) {
+                for (let b = a; b < particlesArray.length; b++) {
+                    let distance = ((particlesArray[a].x - particlesArray[b].x) * (particlesArray[a].x - particlesArray[b].x)) + 
+                                   ((particlesArray[a].y - particlesArray[b].y) * (particlesArray[a].y - particlesArray[b].y));
+                    if (distance < (canvas.width / 7) * (canvas.height / 7)) {
+                        opacityValue = 1 - (distance / 20000);
+                        ctx.strokeStyle = 'rgba(0, 240, 255,' + opacityValue + ')';
+                        ctx.lineWidth = 1;
+                        ctx.beginPath();
+                        ctx.moveTo(particlesArray[a].x, particlesArray[a].y);
+                        ctx.lineTo(particlesArray[b].x, particlesArray[b].y);
+                        ctx.stroke();
+                    }
+                }
+                
+                // Conecta com o mouse
+                if (mouse.x != null && mouse.y != null) {
+                    let dx = mouse.x - particlesArray[a].x;
+                    let dy = mouse.y - particlesArray[a].y;
+                    let distanceToMouse = dx*dx + dy*dy;
+                    if (distanceToMouse < mouse.radius * mouse.radius) {
+                        ctx.strokeStyle = 'rgba(0, 240, 255,' + (1 - distanceToMouse/(mouse.radius*mouse.radius)) + ')';
+                        ctx.lineWidth = 1.5;
+                        ctx.beginPath();
+                        ctx.moveTo(particlesArray[a].x, particlesArray[a].y);
+                        ctx.lineTo(mouse.x, mouse.y);
+                        ctx.stroke();
+                    }
+                }
+            }
+        }
+
+        function animate() {
+            requestAnimationFrame(animate);
+            ctx.clearRect(0, 0, innerWidth, innerHeight);
+            for (let i = 0; i < particlesArray.length; i++) { particlesArray[i].update(); }
+            connect();
+        }
+
+        window.addEventListener('resize', function() {
+            canvas.width = innerWidth; canvas.height = innerHeight;
+            init();
+        });
+
+        init(); animate();
     </script>
 </body>
 </html>
