@@ -3,324 +3,380 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PrimeLogic | Tecnologia que Respira</title>
+    <title>PrimeLogic | Expandindo Limites</title>
     <!-- Fontes Premium -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Space+Grotesk:wght@700;900&display=swap" rel="stylesheet">
-    <!-- Ícones -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Leaflet CSS (Para o Mapa) -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     
     <style>
         :root {
-            --bg-light: #f8fafc;
-            --bg-white: #ffffff;
-            --primary-blue: #1A365D;
-            --accent-blue: #3b82f6;
-            --text-dark: #0f172a;
-            --text-muted: #64748b;
-            --glass-bg: rgba(255, 255, 255, 0.7);
-            --glass-border: rgba(255, 255, 255, 0.5);
-            --shadow-soft: 0 20px 40px rgba(0, 0, 0, 0.05);
-            --shadow-hover: 0 30px 60px rgba(26, 54, 93, 0.12);
+            --bg-base: #f0f4f8;
+            --primary-deep: #1A365D;
+            --accent-glow: #2563eb;
+            --accent-cyan: #06b6d4;
+            --text-heavy: #0f172a;
+            --text-p: #475569;
+            --glass: rgba(255, 255, 255, 0.6);
+            --glass-border: rgba(255, 255, 255, 0.8);
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; scroll-behavior: smooth; }
         
-        body { 
-            background-color: var(--bg-light); 
-            color: var(--text-dark); 
-            overflow-x: hidden; 
-            position: relative;
+        body { background-color: var(--bg-base); color: var(--text-heavy); overflow-x: hidden; }
+
+        /* Fundo Impressionista e Espacial (Mesh Gradient Animado) */
+        .spatial-background {
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: -2;
+            background: linear-gradient(120deg, #f0f4f8, #e0e7ff, #cffafe);
+            background-size: 400% 400%;
+            animation: spaceBreathe 20s ease infinite;
+        }
+        @keyframes spaceBreathe {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
         }
 
-        /* O Dinamismo Clean: Bolhas Flutuantes no Fundo */
-        .ambient-bg {
-            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
-            z-index: -1; overflow: hidden; pointer-events: none;
-            background: var(--bg-light);
-        }
-        .blob {
-            position: absolute; filter: blur(90px); opacity: 0.6;
-            border-radius: 50%; animation: float 20s infinite ease-in-out alternate;
-        }
-        .blob-1 { width: 500px; height: 500px; background: #e0f2fe; top: -10%; left: -10%; animation-delay: 0s; }
-        .blob-2 { width: 400px; height: 400px; background: #dbeafe; bottom: -10%; right: -5%; animation-delay: -5s; }
-        .blob-3 { width: 600px; height: 600px; background: #f1f5f9; top: 40%; left: 30%; animation-delay: -10s; }
-
-        @keyframes float {
-            0% { transform: translate(0, 0) scale(1); }
-            50% { transform: translate(50px, 30px) scale(1.1); }
-            100% { transform: translate(-30px, 50px) scale(0.9); }
-        }
-
-        /* Nav Glassmorphism Premium */
+        /* Nav Enxuta e Escalável */
         nav {
             position: fixed; top: 0; width: 100%; padding: 20px 5%; display: flex; justify-content: space-between; align-items: center;
-            background: var(--glass-bg); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-            border-bottom: 1px solid var(--glass-border); z-index: 9999;
-            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.03);
+            background: rgba(255, 255, 255, 0.7); backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px);
+            border-bottom: 1px solid var(--glass-border); z-index: 100; box-shadow: 0 10px 30px rgba(0,0,0,0.03);
         }
-        .logo-container img { height: 40px; transition: 0.4s ease; }
-        .logo-container img:hover { transform: scale(1.05); }
+        .logo-container img { height: 45px; transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        .logo-container img:hover { transform: scale(1.1) rotate(-2deg); }
         
+        .nav-links { display: flex; gap: 40px; }
         .nav-links a { 
-            color: var(--text-dark); text-decoration: none; font-weight: 600; margin-left: 40px; 
-            font-size: 0.85rem; text-transform: uppercase; letter-spacing: 2px; transition: 0.3s; position: relative; 
+            color: var(--primary-deep); text-decoration: none; font-weight: 800; font-size: 0.85rem; 
+            text-transform: uppercase; letter-spacing: 2px; position: relative; padding: 5px 0;
         }
         .nav-links a::after {
-            content: ''; position: absolute; width: 0; height: 2px; bottom: -5px; left: 0;
-            background-color: var(--accent-blue); transition: width 0.3s ease;
+            content: ''; position: absolute; width: 0; height: 2px; bottom: 0; left: 0;
+            background: linear-gradient(90deg, var(--accent-glow), var(--accent-cyan)); transition: width 0.4s ease;
         }
         .nav-links a:hover::after { width: 100%; }
-        .nav-links a:hover { color: var(--accent-blue); }
 
-        /* Hero */
-        .hero { min-height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 0 20px; }
-        .hero h1 { 
-            font-family: 'Space Grotesk', sans-serif; font-size: clamp(3rem, 8vw, 6rem); font-weight: 900; 
-            line-height: 1; margin-bottom: 25px; color: var(--primary-blue); letter-spacing: -2px; 
-        }
-        .hero h1 span { color: var(--accent-blue); }
+        /* Hero Monumental */
+        .hero { min-height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 0 20px; position: relative; perspective: 1000px; }
+        .hero-content { transform-style: preserve-3d; animation: floatHero 6s ease-in-out infinite alternate; }
+        @keyframes floatHero { from { transform: translateY(0px); } to { transform: translateY(-15px); } }
         
-        .clean-button { 
-            padding: 20px 45px; font-size: 1.1rem; font-weight: 800; color: var(--bg-white); 
-            background: var(--primary-blue); border: none; border-radius: 50px; cursor: pointer; 
-            text-transform: uppercase; letter-spacing: 2px; box-shadow: 0 10px 20px rgba(26, 54, 93, 0.2); 
-            transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); text-decoration: none; display: inline-block; 
-        }
-        .clean-button:hover { 
-            background: var(--accent-blue); box-shadow: 0 15px 30px rgba(59, 130, 246, 0.3); transform: translateY(-5px); 
-        }
-
-        /* Seções de Produto Clean */
-        .product-section { padding: 150px 5%; display: flex; align-items: center; justify-content: space-between; gap: 60px; min-height: 80vh; }
-        .product-section.reverse { flex-direction: row-reverse; }
+        .hero h1 { font-family: 'Space Grotesk', sans-serif; font-size: clamp(4rem, 10vw, 7.5rem); font-weight: 900; line-height: 0.9; color: var(--primary-deep); letter-spacing: -3px; margin-bottom: 30px; text-shadow: 0 20px 40px rgba(26,54,93,0.1); }
+        .hero h1 span { background: linear-gradient(135deg, var(--accent-glow), var(--accent-cyan)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .hero p { font-size: 1.4rem; color: var(--text-p); max-width: 800px; margin: 0 auto 50px; font-weight: 400; line-height: 1.7; }
         
-        .product-content { flex: 1; max-width: 650px; }
-        .product-badge { 
-            display: inline-block; padding: 8px 20px; background: #e0f2fe; color: var(--accent-blue); 
-            border-radius: 30px; font-size: 0.8rem; font-weight: 800; letter-spacing: 2px; margin-bottom: 25px; 
+        /* Serviço Personalizado (DNA da Empresa) */
+        .custom-service { padding: 120px 5%; background: rgba(255,255,255,0.4); backdrop-filter: blur(10px); border-top: 1px solid var(--glass-border); border-bottom: 1px solid var(--glass-border); text-align: center; }
+        .custom-service h2 { font-family: 'Space Grotesk', sans-serif; font-size: 3.5rem; color: var(--primary-deep); margin-bottom: 30px; }
+        .custom-service-grid { display: flex; flex-wrap: wrap; justify-content: center; gap: 40px; max-width: 1200px; margin: 50px auto 0; text-align: left; }
+        .custom-box { flex: 1; min-width: 300px; background: var(--glass); padding: 40px; border-radius: 30px; box-shadow: 0 20px 50px rgba(0,0,0,0.03); border: 1px solid var(--glass-border); transition: 0.5s; }
+        .custom-box:hover { transform: translateY(-10px); box-shadow: 0 30px 60px rgba(37, 99, 235, 0.1); }
+        .custom-box i { font-size: 2.5rem; color: var(--accent-glow); margin-bottom: 20px; }
+        .custom-box h3 { font-size: 1.5rem; margin-bottom: 15px; color: var(--primary-deep); }
+
+        /* Produtos e Efeito Espacial 3D */
+        .products-section { padding: 150px 5%; position: relative; }
+        .section-header { text-align: center; margin-bottom: 80px; }
+        .section-header h2 { font-family: 'Space Grotesk', sans-serif; font-size: 4rem; color: var(--primary-deep); }
+        
+        .products-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 50px; max-width: 1400px; margin: 0 auto; perspective: 1000px; }
+        
+        /* Card 3D Impressionista */
+        .product-card { 
+            background: rgba(255,255,255,0.8); backdrop-filter: blur(20px); border-radius: 40px; padding: 50px; 
+            border: 1px solid rgba(255,255,255,1); box-shadow: 0 30px 60px rgba(0,0,0,0.05);
+            transform-style: preserve-3d; transition: transform 0.1s ease, box-shadow 0.3s ease; cursor: pointer;
+            position: relative; overflow: hidden;
         }
-        .product-content h2 { font-family: 'Space Grotesk', sans-serif; font-size: 4rem; line-height: 1; margin-bottom: 25px; color: var(--primary-blue); }
-        .product-content p { font-size: 1.2rem; color: var(--text-muted); line-height: 1.8; margin-bottom: 50px; }
-
-        .features-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 25px; }
-        .feature-item { 
-            background: var(--bg-white); padding: 30px; border-radius: 20px; 
-            box-shadow: var(--shadow-soft); transition: 0.4s ease; border: 1px solid rgba(0,0,0,0.02);
+        .product-card::before {
+            content: ''; position: absolute; top: 0; left: -100%; width: 50%; height: 100%;
+            background: linear-gradient(to right, transparent, rgba(255,255,255,0.8), transparent);
+            transform: skewX(-20deg); transition: 0.5s;
         }
-        .feature-item:hover { transform: translateY(-10px); box-shadow: var(--shadow-hover); }
-        .feature-item i { font-size: 28px; color: var(--accent-blue); margin-bottom: 15px; }
-        .feature-item h3 { font-size: 1.2rem; color: var(--text-dark); }
+        .product-card:hover::before { left: 150%; }
+        .product-card:hover { box-shadow: 0 50px 100px rgba(37, 99, 235, 0.15); }
+        
+        .card-content { transform: translateZ(50px); /* Traz o texto pra frente do fundo no 3D */ }
+        .product-card h3 { font-family: 'Space Grotesk', sans-serif; font-size: 2.5rem; color: var(--primary-deep); margin-bottom: 15px; }
+        .product-card p { font-size: 1.1rem; color: var(--text-p); margin-bottom: 30px; }
+        .view-btn { background: var(--primary-deep); color: white; border: none; padding: 15px 30px; border-radius: 30px; font-weight: bold; text-transform: uppercase; letter-spacing: 1px; cursor: pointer; pointer-events: none; }
 
-        /* Mockups Visuais Minimalistas */
-        .product-visual { flex: 1; display: flex; justify-content: center; }
-        .mockup-box { 
-            width: 100%; max-width: 550px; height: 450px; background: var(--bg-white); 
-            border-radius: 40px; box-shadow: var(--shadow-soft); border: 1px solid rgba(0,0,0,0.03);
-            display: flex; align-items: center; justify-content: center; font-size: 6rem; position: relative; overflow: hidden;
-            transition: 0.5s ease;
+        /* Modais (Abertura do Produto Específico) */
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(15, 23, 42, 0.4);
+            backdrop-filter: blur(15px); z-index: 1000; display: flex; justify-content: center; align-items: center;
+            opacity: 0; pointer-events: none; transition: opacity 0.4s ease;
         }
-        .mockup-box:hover { transform: scale(1.02); box-shadow: var(--shadow-hover); }
-
-        /* Mapa Section Claro */
-        .map-section { padding: 100px 5%; text-align: center; position: relative; z-index: 10; }
-        .map-section h2 { font-family: 'Space Grotesk', sans-serif; font-size: 3.5rem; margin-bottom: 20px; color: var(--primary-blue); }
-        .map-container { 
-            max-width: 1200px; height: 500px; margin: 40px auto; border-radius: 25px; overflow: hidden; 
-            box-shadow: var(--shadow-soft); position: relative; z-index: 10; border: 10px solid var(--bg-white);
+        .modal-overlay.active { opacity: 1; pointer-events: all; }
+        
+        .modal-content {
+            background: white; width: 90%; max-width: 1000px; max-height: 90vh; border-radius: 40px;
+            padding: 60px; position: relative; overflow-y: auto; transform: scale(0.9) translateY(50px);
+            transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); box-shadow: 0 50px 100px rgba(0,0,0,0.2);
         }
-        #map { width: 100%; height: 100%; background: #e5e7eb; }
+        .modal-overlay.active .modal-content { transform: scale(1) translateY(0); }
+        
+        .close-modal { position: absolute; top: 30px; right: 40px; font-size: 2rem; color: var(--primary-deep); cursor: pointer; background: none; border: none; font-weight: bold; }
+        .close-modal:hover { color: var(--accent-glow); }
 
-        /* Contatos Premium */
-        .contact-section { padding: 100px 20px; text-align: center; }
-        .contact-grid { display: flex; justify-content: center; gap: 40px; margin-top: 50px; flex-wrap: wrap; }
-        .contact-card { 
-            background: var(--bg-white); padding: 40px; border-radius: 25px; box-shadow: var(--shadow-soft); 
-            width: 300px; transition: 0.4s; text-decoration: none; color: var(--text-dark); border: 1px solid rgba(0,0,0,0.02);
-        }
-        .contact-card:hover { transform: translateY(-10px); box-shadow: var(--shadow-hover); }
-        .contact-card i { font-size: 40px; color: var(--accent-blue); margin-bottom: 20px; }
-        .contact-card h3 { font-size: 1.5rem; margin-bottom: 10px; font-weight: 800; }
+        .modal-header { display: flex; align-items: center; gap: 30px; margin-bottom: 40px; border-bottom: 2px solid #f1f5f9; padding-bottom: 30px; }
+        .modal-header h2 { font-family: 'Space Grotesk', sans-serif; font-size: 3.5rem; color: var(--primary-deep); }
+        
+        .offer-tag { background: linear-gradient(135deg, #10b981, #059669); color: white; padding: 10px 20px; border-radius: 30px; font-weight: 900; letter-spacing: 1px; font-size: 1.1rem; box-shadow: 0 10px 20px rgba(16, 185, 129, 0.3); display: inline-block; margin-bottom: 20px;}
+        
+        .modal-body p { font-size: 1.2rem; color: var(--text-p); line-height: 1.8; margin-bottom: 20px; }
+        .modal-features { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin-top: 40px; }
+        .m-feature { background: #f8fafc; padding: 25px; border-radius: 20px; border: 1px solid #e2e8f0; }
+        .m-feature h4 { color: var(--primary-deep); font-size: 1.3rem; margin-bottom: 10px; }
 
-        /* Footer */
-        footer { text-align: center; padding: 40px 20px; color: var(--text-muted); font-size: 0.9rem; border-top: 1px solid rgba(0,0,0,0.05); }
+        .cta-btn { display: block; width: 100%; text-align: center; background: var(--primary-deep); color: white; padding: 20px; border-radius: 20px; font-size: 1.5rem; font-weight: 900; text-decoration: none; margin-top: 40px; transition: 0.3s; }
+        .cta-btn:hover { background: var(--accent-glow); transform: translateY(-5px); box-shadow: 0 20px 40px rgba(37,99,235,0.3); }
 
-        /* Scroll Reveal Animations */
-        .hidden-element { opacity: 0; transform: translateY(50px); transition: all 1s cubic-bezier(0.22, 1, 0.36, 1); }
-        .show-element { opacity: 1; transform: translateY(0); }
-        .delay-1 { transition-delay: 0.15s; }
-        .delay-2 { transition-delay: 0.3s; }
+        /* Mapa e Contato */
+        .map-section { padding: 100px 5%; text-align: center; background: rgba(255,255,255,0.3); backdrop-filter: blur(10px); }
+        #map { width: 100%; max-width: 1200px; height: 500px; margin: 40px auto; border-radius: 40px; border: 5px solid white; box-shadow: 0 30px 60px rgba(0,0,0,0.1); }
+        footer { padding: 40px; text-align: center; background: var(--primary-deep); color: white; }
 
-        @media (max-width: 968px) { 
-            .product-section, .product-section.reverse { flex-direction: column; text-align: center; }
+        @media (max-width: 968px) {
             .nav-links { display: none; }
-            .hero h1 { font-size: 3rem; }
+            .hero h1 { font-size: 3.5rem; }
+            .modal-features { grid-template-columns: 1fr; }
+            .modal-content { padding: 40px 20px; }
         }
     </style>
 </head>
 <body>
 
-    <!-- Fundo Imersivo Clean -->
-    <div class="ambient-bg">
-        <div class="blob blob-1"></div>
-        <div class="blob blob-2"></div>
-        <div class="blob blob-3"></div>
-    </div>
+    <div class="spatial-background"></div>
 
     <nav>
         <div class="logo-container">
             <img src="Logo.png" alt="PrimeLogic Logo">
         </div>
         <div class="nav-links">
-            <a href="#nextinline">NextInLine</a>
-            <a href="#primemenu">PrimeMenu</a>
-            <a href="#mapa">Cobertura</a>
+            <a href="#home">Home</a>
+            <a href="#produtos">Produtos</a>
+            <a href="#custom">Sob Medida</a>
+            <a href="#cobertura">Cobertura</a>
             <a href="#contato">Contato</a>
         </div>
     </nav>
 
-    <section class="hero hidden-element">
-        <h1>TECNOLOGIA QUE<br><span>RESPIRA.</span></h1>
-        <p style="font-size: 1.3rem; color: var(--text-muted); max-width: 700px; margin: 20px auto 40px; font-weight: 400;">
-            Sistemas leves, fluidos e implacáveis. A PrimeLogic constrói a ponte entre a complexidade do código e a clareza da sua operação.
-        </p>
-        <a href="#nextinline" class="clean-button">Explorar Soluções</a>
-    </section>
-
-    <!-- NEXTINLINE -->
-    <section id="nextinline" class="product-section">
-        <div class="product-content hidden-element">
-            <span class="product-badge">SAÚDE & GESTÃO</span>
-            <h2>NextInLine</h2>
-            <p>O caos na recepção acabou. Um sistema de gestão de filas ultrarrápido, projetado para transmitir tranquilidade e controle em ambientes de alto fluxo.</p>
-            
-            <div class="features-grid">
-                <div class="feature-item hidden-element delay-1">
-                    <i class="fa-solid fa-microchip"></i>
-                    <h3>Hardware Kiosk</h3>
-                    <p style="font-size: 0.95rem; color: var(--text-muted); margin-top: 5px;">A TV Box liga e foca apenas no sistema. Imune a falhas.</p>
-                </div>
-                <div class="feature-item hidden-element delay-2">
-                    <i class="fa-solid fa-server"></i>
-                    <h3>WebSockets API</h3>
-                    <p style="font-size: 0.95rem; color: var(--text-muted); margin-top: 5px;">Chamadas sincronizadas em milissegundos.</p>
-                </div>
-            </div>
-        </div>
-        <div class="product-visual hidden-element">
-            <div class="mockup-box">
-                <i class="fa-solid fa-display" style="color: var(--primary-blue);"></i>
-            </div>
+    <section id="home" class="hero">
+        <div class="hero-content">
+            <h1>O IMPOSSÍVEL É SÓ<br><span>QUESTÃO DE OPINIÃO.</span></h1>
+            <p>Não viemos pra ser mais um sistema na sua tela. Nós somos a engenharia por trás do seu crescimento. Sistemas imersivos, implacáveis e desenhados para dominar.</p>
         </div>
     </section>
 
-    <!-- PRIMEMENU -->
-    <section id="primemenu" class="product-section reverse">
-        <div class="product-content hidden-element">
-            <span class="product-badge">FOODTECH & ESCALA</span>
-            <h2>PrimeMenu</h2>
-            <p>Sua marca, suas regras. Um cardápio digital próprio conectado a um PDV fluido. Sem comissões que sugam o seu lucro. O cliente pede feliz e o seu caixa respira aliviado.</p>
-            
-            <div class="features-grid">
-                <div class="feature-item hidden-element delay-1">
-                    <i class="fa-brands fa-whatsapp"></i>
-                    <h3>Robô Zap</h3>
-                    <p style="font-size: 0.95rem; color: var(--text-muted); margin-top: 5px;">Aviso automático no bolso do seu cliente.</p>
-                </div>
-                <div class="feature-item hidden-element delay-2">
-                    <i class="fa-solid fa-chart-line"></i>
-                    <h3>Lucro Total</h3>
-                    <p style="font-size: 0.95rem; color: var(--text-muted); margin-top: 5px;">Você retém 100% do pedido. Independência de verdade.</p>
-                </div>
-            </div>
-        </div>
-        <div class="product-visual hidden-element">
-            <div class="mockup-box">
-                <i class="fa-solid fa-mobile-screen-button" style="color: var(--accent-blue);"></i>
-            </div>
-        </div>
-    </section>
-
-    <!-- MAPA CLEAN E ELEGANTE -->
-    <section id="mapa" class="map-section">
-        <h2 class="hidden-element">DOMINANDO O MAPA.</h2>
-        <p class="hidden-element" style="font-size: 1.2rem; color: var(--text-muted);">Transparência total. Clique nas cidades e veja nossa operação rodando lisa pelo Noroeste Paulista.</p>
+    <!-- SERVIÇO SOB MEDIDA -->
+    <section id="custom" class="custom-service">
+        <h2>TECNOLOGIA SOB MEDIDA</h2>
+        <p style="font-size: 1.3rem; color: var(--text-p); max-width: 800px; margin: 0 auto;">Sua operação é única, seu software também deve ser. A PrimeLogic atua como a sua arquitetura de tecnologia particular. Nós não te vendemos o que temos, nós construímos exatamente o que você precisa.</p>
         
-        <div class="map-container hidden-element delay-1">
-            <div id="map"></div>
+        <div class="custom-service-grid">
+            <div class="custom-box">
+                <i class="fa-solid fa-code"></i>
+                <h3>Sistemas Exclusivos</h3>
+                <p>Do rascunho ao código bruto. Desenvolvemos ecossistemas inteiros baseados na rotina e nas dores da sua empresa. Sem remendos.</p>
+            </div>
+            <div class="custom-box">
+                <i class="fa-solid fa-rocket"></i>
+                <h3>Escala Absoluta</h3>
+                <p>Aplicações preparadas para crescer junto com você. Nuvem, bancos de dados parrudas e integrações sem limites.</p>
+            </div>
         </div>
     </section>
 
-    <!-- ÁREA DE CONTATO -->
-    <section id="contato" class="contact-section hidden-element">
-        <h2 style="font-family: 'Space Grotesk'; font-size: 3.5rem; color: var(--primary-blue);">CONECTE-SE.</h2>
-        <div class="contact-grid">
-            <a href="https://wa.me/5517996181897" target="_blank" class="contact-card hidden-element delay-1">
-                <i class="fa-brands fa-whatsapp"></i>
-                <h3>WhatsApp</h3>
-                <p style="color: var(--text-muted);">(17) 99618-1897</p>
-            </a>
-            <a href="https://instagram.com/primelogicoficial" target="_blank" class="contact-card hidden-element delay-2">
-                <i class="fa-brands fa-instagram"></i>
-                <h3>Instagram</h3>
-                <p style="color: var(--text-muted);">@primelogicoficial</p>
-            </a>
+    <!-- PRODUTOS -->
+    <section id="produtos" class="products-section">
+        <div class="section-header">
+            <h2>ECOSSISTEMA PRIMELOGIC</h2>
+            <p style="font-size: 1.2rem; color: var(--text-p);">Selecione um módulo para expandir.</p>
+        </div>
+
+        <div class="products-grid">
+            <!-- Card NextInLine -->
+            <div class="product-card tilt-card" onclick="openModal('nextinline')">
+                <div class="card-content">
+                    <i class="fa-solid fa-users-viewfinder" style="font-size: 3rem; color: var(--accent-glow); margin-bottom: 20px;"></i>
+                    <h3>NextInLine</h3>
+                    <p>Controle absoluto de filas e recepção. Hardware dedicado e gestão em milissegundos.</p>
+                    <button class="view-btn">Expandir Módulo</button>
+                </div>
+            </div>
+
+            <!-- Card PrimeMenu -->
+            <div class="product-card tilt-card" onclick="openModal('primemenu')">
+                <div class="card-content">
+                    <i class="fa-solid fa-mobile-button" style="font-size: 3rem; color: var(--accent-cyan); margin-bottom: 20px;"></i>
+                    <h3>PrimeMenu</h3>
+                    <p>O seu cardápio, a sua liberdade. Plataforma white-label para dominar o delivery.</p>
+                    <button class="view-btn">Expandir Módulo</button>
+                </div>
+            </div>
         </div>
     </section>
 
-    <footer>
-        <img src="Logo.png" alt="Logo Footer" height="25" style="filter: grayscale(100%) opacity(0.5); margin-bottom: 15px;">
-        <p>&copy; 2026 PrimeLogic Software House. A excelência mora nos detalhes.</p>
+    <!-- MAPA -->
+    <section id="cobertura" class="map-section">
+        <h2 style="font-family: 'Space Grotesk'; font-size: 3.5rem; color: var(--primary-deep);">NOSSA ÁREA DE DOMÍNIO</h2>
+        <div id="map"></div>
+    </section>
+
+    <!-- FOOTER E CONTATO -->
+    <footer id="contato">
+        <h2 style="font-family: 'Space Grotesk'; font-size: 2.5rem; margin-bottom: 30px;">TÂMO NA ATIVIDADE.</h2>
+        <p style="font-size: 1.2rem; margin-bottom: 20px;">Fale com a diretoria agora e assuma o controle.</p>
+        <a href="https://wa.me/5517996181897" target="_blank" style="display: inline-block; background: #25D366; color: white; padding: 15px 40px; border-radius: 30px; font-weight: bold; text-decoration: none; font-size: 1.2rem; margin: 10px;">
+            <i class="fa-brands fa-whatsapp"></i> (17) 99618-1897
+        </a>
+        <a href="https://instagram.com/primelogicoficial" target="_blank" style="display: inline-block; background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%); color: white; padding: 15px 40px; border-radius: 30px; font-weight: bold; text-decoration: none; font-size: 1.2rem; margin: 10px;">
+            <i class="fa-brands fa-instagram"></i> @primelogicoficial
+        </a>
+        <div style="margin-top: 50px; opacity: 0.5;">
+            <img src="Logo.png" alt="PrimeLogic" height="30">
+            <p>&copy; 2026 PrimeLogic. Dias de luta, dias de glória.</p>
+        </div>
     </footer>
 
-    <!-- Scripts do Mapa Leaflet -->
+
+    <!-- ================= MODAIS DE PRODUTOS ================= -->
+
+    <!-- Modal NextInLine -->
+    <div class="modal-overlay" id="modal-nextinline">
+        <div class="modal-content">
+            <button class="close-modal" onclick="closeModals()">×</button>
+            <div class="modal-header">
+                <i class="fa-solid fa-users-viewfinder" style="font-size: 4rem; color: var(--accent-glow);"></i>
+                <div>
+                    <h2>NextInLine</h2>
+                    <span style="color: var(--text-p); font-size: 1.2rem; text-transform: uppercase; letter-spacing: 2px;">Gestão de Alto Desempenho</span>
+                </div>
+            </div>
+            <div class="modal-body">
+                <div class="offer-tag">APARELHO DO SISTEMA TOTALMENTE GRÁTIS + 3 MESES NA FAIXA!</div>
+                <p>Nós não entregamos só um site para você abrir na sua clínica ou prefeitura. Nós entregamos o <strong>equipamento oficial da PrimeLogic</strong>. O aparelho do sistema já vem blindado e configurado: é plugar na TV e a sua operação muda de nível na hora.</p>
+                <p>Para você sentir o peso e a qualidade da nossa infraestrutura, o equipamento é por nossa conta, e a gente te dá <strong>3 meses de serviço totalmente gratuitos</strong> para rodar a operação sem amarras.</p>
+                
+                <div class="modal-features">
+                    <div class="m-feature">
+                        <h4>Kiosk Mode Ativo</h4>
+                        <p>O aparelho não permite desvios. Ele liga e tranca na tela de chamadas. Segurança corporativa total.</p>
+                    </div>
+                    <div class="m-feature">
+                        <h4>WebSockets API</h4>
+                        <p>Sem atrasos. O operador aperta o botão e a TV chama o paciente na mesma fração de segundo.</p>
+                    </div>
+                </div>
+                <a href="https://wa.me/5517996181897?text=Quero%20saber%20mais%20sobre%20o%20NextInLine%20com%20aparelho%20gr%C3%A1tis!" target="_blank" class="cta-btn">QUERO GARANTIR MEU APARELHO AGORA</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal PrimeMenu -->
+    <div class="modal-overlay" id="modal-primemenu">
+        <div class="modal-content">
+            <button class="close-modal" onclick="closeModals()">×</button>
+            <div class="modal-header">
+                <i class="fa-solid fa-mobile-button" style="font-size: 4rem; color: var(--accent-cyan);"></i>
+                <div>
+                    <h2>PrimeMenu</h2>
+                    <span style="color: var(--text-p); font-size: 1.2rem; text-transform: uppercase; letter-spacing: 2px;">Delivery Independente</span>
+                </div>
+            </div>
+            <div class="modal-body">
+                <div class="offer-tag">1 MÊS TOTALMENTE GRÁTIS PARA VOCÊ TESTAR!</div>
+                <p>Chega de dividir o seu lucro suado com aplicativos que cobram 27% de taxa. O PrimeMenu é a sua alforria. Você ganha uma plataforma com a sua identidade visual, onde o cliente pede e o dinheiro vai 100% para o seu caixa.</p>
+                <p>Bote o nosso sistema à prova na sua lanchonete ou restaurante. Aproveite <strong>1 mês grátis</strong> para ver a mágica do robô avisando seus clientes no WhatsApp enquanto sua equipe foca apenas em fazer a comida sair rápida.</p>
+                
+                <div class="modal-features">
+                    <div class="m-feature">
+                        <h4>Painel de Caixa (PDV)</h4>
+                        <p>Avisa com alarme sonoro na tela do seu computador sempre que um pedido novo entra.</p>
+                    </div>
+                    <div class="m-feature">
+                        <h4>Robô de WhatsApp</h4>
+                        <p>Notifica o cliente automaticamente quando o lanche vai pra chapa e quando sai pra entrega.</p>
+                    </div>
+                </div>
+                <a href="https://wa.me/5517996181897?text=Quero%20meu%201%20m%C3%AAs%20gr%C3%A1tis%20do%20PrimeMenu!" target="_blank" class="cta-btn">ATIVAR MEU MÊS GRÁTIS</a>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- ================= SCRIPTS ================= -->
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-    
     <script>
-        // 1. SCROLL REVEAL (O que dá a vida e o dinamismo suave ao rolar a página)
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach((entry) => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('show-element');
-                }
+        // 1. Efeito Espacial 3D nos Cards (Tilt Effect Vanilla JS)
+        const tiltCards = document.querySelectorAll('.tilt-card');
+        tiltCards.forEach(card => {
+            card.addEventListener('mousemove', e => {
+                const rect = card.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                const centerX = rect.width / 2;
+                const centerY = rect.height / 2;
+                
+                const rotateX = ((y - centerY) / centerY) * -15; // Inversão para o tilt parecer natural
+                const rotateY = ((x - centerX) / centerX) * 15;
+                
+                card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.02, 1.02, 1.02)`;
             });
-        }, { threshold: 0.15 });
+            
+            card.addEventListener('mouseleave', () => {
+                card.style.transform = `perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)`;
+            });
+        });
 
-        document.querySelectorAll('.hidden-element').forEach((el) => observer.observe(el));
+        // 2. Controle dos Modais Dimensionais
+        function openModal(id) {
+            document.getElementById('modal-' + id).classList.add('active');
+            document.body.style.overflow = 'hidden'; // Trava o scroll do fundo
+        }
 
-        // 2. CONFIGURAÇÃO DO MAPA CLEAN (Leaflet)
+        function closeModals() {
+            document.querySelectorAll('.modal-overlay').forEach(modal => {
+                modal.classList.remove('active');
+            });
+            document.body.style.overflow = 'auto'; // Destrava o scroll
+        }
+
+        // Fechar modal clicando fora da caixa
+        window.onclick = function(event) {
+            if (event.target.classList.contains('modal-overlay')) {
+                closeModals();
+            }
+        }
+
+        // 3. Mapa Imersivo Clean
         var map = L.map('map', { scrollWheelZoom: false }).setView([-20.08, -50.45], 10);
-
-        // Mapa Light Elegante (CartoDB Voyager)
         L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
-            attribution: '&copy; PrimeLogic',
-            maxZoom: 19
+            attribution: '&copy; PrimeLogic', maxZoom: 19
         }).addTo(map);
 
-        // Ícone Minimalista (Bolinha azul escura com sombra suave)
         var cleanIcon = L.divIcon({
             className: 'custom-div-icon',
-            html: "<div style='background-color:#1A365D; width:16px; height:16px; border-radius:50%; box-shadow: 0 4px 10px rgba(26,54,93,0.5); border: 2px solid white; transition: 0.3s; transform-origin: center;'></div>",
-            iconSize: [16, 16],
-            iconAnchor: [8, 8]
+            html: "<div style='background: linear-gradient(135deg, #2563eb, #06b6d4); width:20px; height:20px; border-radius:50%; box-shadow: 0 5px 15px rgba(37,99,235,0.6); border: 3px solid white;'></div>",
+            iconSize: [20, 20], iconAnchor: [10, 10]
         });
 
         const cities = [
-            { name: "Turmalina", coords: [-20.266, -50.478], status: "NextInLine" },
-            { name: "Dolcinópolis", coords: [-20.121, -50.513], status: "Operação Ativa" },
-            { name: "Mira Estrela", coords: [-19.982, -50.146], status: "Operação Ativa" },
-            { name: "Populina", coords: [-19.932, -50.627], status: "Operação Ativa" },
-            { name: "Pedranópolis", coords: [-20.244, -50.011], status: "Operação Ativa" },
-            { name: "Mesópolis", coords: [-19.957, -50.871], status: "Operação Ativa" },
-            { name: "Ouroeste", coords: [-20.000, -50.375], status: "Em Expansão" }
+            { name: "Turmalina", coords: [-20.266, -50.478] },
+            { name: "Dolcinópolis", coords: [-20.121, -50.513] },
+            { name: "Mira Estrela", coords: [-19.982, -50.146] },
+            { name: "Populina", coords: [-19.932, -50.627] },
+            { name: "Pedranópolis", coords: [-20.244, -50.011] },
+            { name: "Mesópolis", coords: [-19.957, -50.871] },
+            { name: "Ouroeste", coords: [-20.000, -50.375] }
         ];
 
         cities.forEach(city => {
-            L.marker(city.coords, {icon: cleanIcon})
-             .addTo(map)
-             .bindPopup(`<div style="text-align: center;"><strong style="color:#1A365D; font-size:15px; font-family:'Inter', sans-serif;">${city.name}</strong><br><span style="color:#64748b; font-family:'Inter', sans-serif; font-size: 13px;">${city.status}</span></div>`);
+            L.marker(city.coords, {icon: cleanIcon}).addTo(map)
+             .bindPopup(`<strong style="color:#1A365D; font-size:16px;">${city.name}</strong><br>Domínio PrimeLogic`);
         });
     </script>
 </body>
