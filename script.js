@@ -6,7 +6,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const header = document.getElementById('header');
     
     window.addEventListener('scroll', () => {
-        if (window.scrollY > 50) {
+        if (window.scrollY > 40) {
             header.classList.add('scrolled');
         } else {
             header.classList.remove('scrolled');
@@ -43,7 +43,7 @@ document.addEventListener('DOMContentLoaded', () => {
     ========================================== */
     const observerOptions = {
         root: null,
-        rootMargin: '0px 0px -100px 0px',
+        rootMargin: '0px 0px -80px 0px',
         threshold: 0.15
     };
 
@@ -52,7 +52,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const revealOnScroll = new IntersectionObserver((entries, observer) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
-                // Adiciona ligeiro delay escalonado se houver elementos irmãos próximos
                 entry.target.classList.add('visible');
                 observer.unobserve(entry.target);
             }
@@ -64,18 +63,18 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     /* ==========================================
-       4. EFEITO HOVER INTELIGENTE PARA CARDS
+       4. EFEITO DE LUZ INTELIGENTE (LINEAR-STYLE GLOW)
     ========================================== */
-    const cards = document.querySelectorAll('.service-card, .project-card');
+    const glowCards = document.querySelectorAll('[data-glow]');
 
-    cards.forEach(card => {
+    glowCards.forEach(card => {
         card.addEventListener('mousemove', (e) => {
             const rect = card.getBoundingClientRect();
             const x = e.clientX - rect.left;
             const y = e.clientY - rect.top;
             
-            // Cria uma ligeira iluminação sutil baseada no cursor (estilo linear)
-            card.style.background = `radial-gradient(circle at ${x}px ${y}px, rgba(255, 255, 255, 0.04) 0%, var(--surface-card) 60%)`;
+            // Iluminação sutil com gradiente radial acionado pelo cursor
+            card.style.background = `radial-gradient(800px circle at ${x}px ${y}px, rgba(255, 255, 255, 0.06), var(--surface-card) 40%)`;
         });
 
         card.addEventListener('mouseleave', () => {
@@ -84,7 +83,33 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     /* ==========================================
-       5. ROLAGEM SUAVE EXTRA PARA LINKS INTERNOS
+       5. ACORDEÃO DO FAQ (INTERATIVIDADE CRO)
+    ========================================== */
+    const faqItems = document.querySelectorAll('.faq-item');
+
+    faqItems.forEach(item => {
+        const questionBtn = item.querySelector('.faq-question');
+        const answer = item.querySelector('.faq-answer');
+
+        questionBtn.addEventListener('click', () => {
+            const isActive = item.classList.contains('active');
+
+            // Fecha todos os outros itens para manter a página limpa
+            faqItems.forEach(otherItem => {
+                otherItem.classList.remove('active');
+                otherItem.querySelector('.faq-answer').style.maxHeight = null;
+            });
+
+            // Se não estava ativo, abre o atual
+            if (!isActive) {
+                item.classList.add('active');
+                answer.style.maxHeight = answer.scrollHeight + 40 + 'px';
+            }
+        });
+    });
+
+    /* ==========================================
+       6. ROLAGEM SUAVE EM LINKS INTERNOS
     ========================================== */
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         anchor.addEventListener('click', function (e) {
@@ -94,7 +119,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const targetElement = document.querySelector(targetId);
             if (targetElement) {
                 e.preventDefault();
-                const headerOffset = 80;
+                const headerOffset = 90;
                 const elementPosition = targetElement.getBoundingClientRect().top;
                 const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
 
